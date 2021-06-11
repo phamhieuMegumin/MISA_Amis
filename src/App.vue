@@ -1,28 +1,30 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+  <v-app id="inspire">
+    <v-navigation-drawer v-model="drawer" app>
+      <!--Nav bar  -->
+      <NavBar />
+    </v-navigation-drawer>
+
+    <v-app-bar app>
+      <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
+      <!-- Header -->
+      <Header />
+    </v-app-bar>
+
+    <v-main>
+      <!-- Main content  -->
+      <Content />
+    </v-main>
+  </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+import NavBar from "./components/layout/NavBar.vue";
+import Header from "./components/layout/Header.vue";
+import Content from "./components/layout/Content.vue";
+import "./css/main.css";
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
-}
+  components: { NavBar, Header, Content },
+  data: () => ({ drawer: null }),
+};
 </script>
-
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>

@@ -1,0 +1,60 @@
+/* reset css */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: notosans-regular, sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+}
+
+/* import font style */
+@font-face {
+  font-family: "notosans-regular";
+  src: url("../assets/fonts/notosans-regular.2cb88a13.woff2") format("opentype");
+}
+@font-face {
+  font-family: "notosans-semibold";
+  src: url("../assets/fonts/notosans-semibold.df3e6dc4.woff2")
+    format("opentype");
+}
+@font-face {
+  font-family: "notosans-bold";
+  src: url("../assets/fonts/notosans-bold.3ede5aff.woff2") format("opentype");
+}
+
+/* Nav bar css */
+.v-app-bar {
+  height: 48px !important;
+  left: 178px !important;
+}
+.v-navigation-drawer {
+  width: 178px !important;
+  background-color: #393a3d !important;
+}
+/* Header css */
+.v-toolbar__content {
+  height: 48px !important;
+}
+.v-toolbar__content,
+.v-toolbar__extension {
+  padding: 4px 10px !important;
+}
+.v-sheet.v-app-bar.v-toolbar:not(.v-sheet--outlined) {
+  box-shadow: none !important;
+}
+.v-app-bar.v-toolbar.v-sheet {
+  background-color: #fff !important;
+}
+/* main css */
+.v-main {
+  padding: 48px 0px 0px 178px !important;
+  height: calc(100vh - 48px) !important;
+  overflow: hidden;
+}
+/* dialog css*/
+.v-dialog:not(.v-dialog--fullscreen) {
+  max-height: calc(100% - 34px) !important;
+  height: calc(100% - 34px) !important;
+}
