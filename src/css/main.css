@@ -105,7 +105,10 @@ label {
   display: none !important;
 }
 .v-input--selection-controls__ripple {
-  display: none;
+  height: 24px;
+  width: 24px;
+  left: -10px !important;
+  top: calc(50% - 19px) !important;
 }
 .v-input--selection-controls__input {
   height: 18px;

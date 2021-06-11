@@ -76,11 +76,10 @@
                 Chi nhánh tài khoản ngân hàng
                 <div class="line"></div>
               </th>
-              <div class="sticky th-sticky m-120">
-                <th>
-                  Chức năng
-                </th>
-              </div>
+              <th class="th-sticky m-120">
+                <div class="border-left"></div>
+                Chức năng
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -98,28 +97,33 @@
               <td>asfdasfadsfasdf</td>
               <td>asfdasfadsfasdf</td>
               <td>asfdasfadsfasdf</td>
-              <td>asfdasfadsfasdf</td>
-              <div class="sticky">
-                <td>
-                  <div class="fix-container">
-                    <span>Sửa</span>
-                    <div class="choose-btn">
-                      <div class="dropdown-icon"></div>
+              <td class="no--right-border">asfdasfadsfasdf</td>
+              <td class="sticky no--right-border">
+                <div class="border-left border-left--dotted"></div>
+                <div class="fix-container">
+                  <span>Sửa</span>
+                  <div class="choose-btn">
+                    <!-- dropdown -->
+                    <div
+                      class="dropdown-icon"
+                      tabindex="0"
+                      @click="isShowTableSelect = !isShowTableSelect"
+                      @focusout="isShowTableSelect = false"
+                    >
+                      <div v-if="isShowTableSelect" class="list-select">
+                        <div class="list-select-item">Nhân bản</div>
+                        <div class="list-select-item">
+                          Xóa
+                        </div>
+                        <div class="list-select-item">Ngừng sử dụng</div>
+                      </div>
                     </div>
-                    <!-- <div v-if="isShownFixSelect" class="list-select">
-          <div class="list-select-item">Nhân bản</div>
-          <div
-            class="list-select-item"
-            @click="handleDelete(employee.employeeId, employee.employeeCode)"
-          >
-            Xóa
-          </div>
-          <div class="list-select-item">Ngừng sử dụng</div>
-        </div> -->
+
+                    <!-- End of dropdown -->
                   </div>
-                  <!-- <div class="line"></div> -->
-                </td>
-              </div>
+                </div>
+                <!-- <div class="line"></div> -->
+              </td>
             </tr>
             <!-- End of employee detail -->
           </tbody>
@@ -166,6 +170,8 @@ export default {
     return {
       filterValue: null, // giá trị ô filter
       dialogAddOrUpdate: false, // ẩn hiện dialog
+      isShowTableSelect: false,
+      items: ["Foo", "Bar", "Fizz", "Buzz"],
     };
   },
   methods: {
@@ -257,6 +263,8 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  border-top: 1px solid #c7c7c7;
+  z-index: 102;
 }
 .pagination-wrapper {
   display: flex;

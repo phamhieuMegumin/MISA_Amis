@@ -5,11 +5,13 @@ tr {
   min-width: 40px;
   width: 40px;
 }
-tr td {
+tbody tr td {
   padding: 5px 10px;
   border-bottom: 1px solid #c7c7c7;
-  border-right: 1px dotted #c7c7c7;
   background: #fff;
+}
+tr td:not(.no--right-border) {
+  border-right: 1px dotted #c7c7c7;
 }
 tr:hover td {
   background: #f3f8f8;
@@ -24,9 +26,7 @@ tr:hover td {
   background: #fff;
   z-index: 100;
 }
-tbody .sticky {
-  border-left: 1px dotted #c7c7c7;
-}
+
 /* choose btn */
 .fix-container {
   display: flex;
@@ -85,14 +85,14 @@ tbody .sticky {
   font-family: "notosans-bold";
   background: #eceef1;
   top: 0;
+  position: sticky;
+  white-space: nowrap;
   color: #000;
   border-bottom: 1px solid #c7c7c7;
   box-shadow: 0 1px 1px -1px #bbb;
-  z-index: 100;
+  z-index: 101;
 }
-.table thead th:not(:last-child) {
-  position: sticky;
-}
+
 .m-250 {
   min-width: 250px;
 }
@@ -108,24 +108,37 @@ tbody .sticky {
 .th-sticky {
   right: 0;
   text-align: center !important;
-  border-left: 1px solid#c7c7c7;
   z-index: 101;
 }
 .th-sticky th {
   height: 34px;
   width: 120px;
 }
-/* .line {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 1px;
-  background-color: #c7c7c7;
-  height: 100%;
-} */
+
 /* Drop down in table */
 .dropdown-icon {
   width: 16px;
   height: 16px;
   background: url("../assets/img/Sprites.64af8f61.svg") no-repeat -896px -359px;
+}
+/* border sticky */
+.border-left {
+  width: 120px;
+  height: 34px;
+  left: 0;
+  top: 0;
+  border-left: 1px solid #c7c7c7;
+  position: absolute;
+}
+.border-left--dotted {
+  border-left: 1px dotted #c7c7c7;
+  top: 0;
+  height: 47px;
+}
+/* table select */
+.v-text-field.v-text-field--enclosed:not(.v-text-field--rounded)
+  > .v-input__control
+  > .v-input__slot,
+.v-text-field.v-text-field--enclosed .v-text-field__details {
+  padding: 0 !important;
 }
