@@ -58,3 +58,72 @@
   max-height: calc(100% - 34px) !important;
   height: calc(100% - 34px) !important;
 }
+/* label dialog */
+label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+/* autocomplete css */
+.v-input__control {
+  min-height: 33px !important;
+}
+.v-text-field {
+  height: 33px;
+}
+.v-text-field.v-text-field--solo:not(.v-text-field--solo-flat)
+  > .v-input__control
+  > .v-input__slot {
+  box-shadow: none !important;
+  border-radius: 2px;
+  border: 1px solid #babec5;
+}
+.v-input__icon {
+  width: 32px !important;
+  height: 32px !important;
+  cursor: pointer;
+}
+.v-input__icon:hover {
+  background: #e0e0e0;
+}
+.v-text-field.v-text-field--enclosed:not(.v-text-field--rounded)
+  > .v-input__control
+  > .v-input__slot,
+.v-text-field.v-text-field--enclosed .v-text-field__details {
+  padding-right: 0px;
+}
+/* Radio button */
+.v-input--radio-group--column .v-radio:not(:last-child):not(:only-child) {
+  margin-bottom: 0px !important;
+}
+.v-input--selection-controls {
+  margin-top: 0px !important;
+  padding-top: 0px !important;
+}
+.v-messages {
+  display: none !important;
+}
+.v-input--selection-controls__ripple {
+  display: none;
+}
+.v-input--selection-controls__input {
+  height: 18px;
+  width: 18px;
+}
+.v-label {
+  margin-bottom: 0px !important;
+  font-size: 13px !important;
+  color: #000 !important;
+  font-weight: 400 !important;
+}
+.v-input__slot {
+  margin-bottom: 0px !important;
+  height: 33px !important;
+}
+.v-radio:not(:last-child) {
+  margin-right: 20px;
+}
+.v-input--radio-group__input {
+  margin-left: 10px;
+}

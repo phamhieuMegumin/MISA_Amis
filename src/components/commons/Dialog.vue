@@ -14,7 +14,10 @@
       </div>
       <div class="modal-close">
         <div class="modal-icon help-icon"></div>
-        <div class="modal-icon close-icon"></div>
+        <div
+          class="modal-icon close-icon"
+          @click="$emit('handleCloseDialog')"
+        ></div>
       </div>
     </div>
     <!-- end modal header -->
@@ -28,19 +31,18 @@
               <InputField :label="'Mã'" :required="true" />
             </div>
             <div class="input-name">
-              <InputField :label="'Tên'" :required="true" />
+              <InputField :label="'Tên'" :required="true" :autofocus="true" />
             </div>
           </div>
           <div class="p-12">
-            <!-- <DropdownField
-              :label="'Đơn vị'"
-              :down="true"
-              :listOption="formatOptionDepartment"
-              nameField="DeparmentField"
-              :value="employee.deparmentId"
-              :required="true"
-              :validateDeparment="validateDeparment"
-            /> -->
+            <label>Đơn vị</label>
+            <v-autocomplete
+              solo
+              :items="deparment"
+              item-text="name"
+              item-value="id"
+              no-data-text="Không có dữ liệu"
+            ></v-autocomplete>
           </div>
           <div class="p-12">
             <InputField :label="'Chức danh'" />
@@ -54,35 +56,15 @@
               <InputField :label="'Ngày sinh'" type="date" />
             </div>
             <!-- gender -->
-            <div class="combobox-wrapper">
-              <label>Giới tính</label>
-              <div class="combobox-gender">
-                <div
-                  @click="(male = true), (female = false)"
-                  class="comboxbox-item"
-                >
-                  <div
-                    class="combobox-icon"
-                    :class="male ? 'active' : ''"
-                  ></div>
-                  <div class="combobox-content">
-                    Nam
-                  </div>
-                </div>
-                <div
-                  @click="(male = false), (female = true)"
-                  class="comboxbox-item"
-                >
-                  <div
-                    class="combobox-icon"
-                    :class="female ? 'active' : ''"
-                  ></div>
-                  <div class="combobox-content">
-                    Nữ
-                  </div>
-                </div>
+            <v-radio-group>
+              <label class="gender-label">Giới tính</label>
+              <div class="radio-container">
+                <v-radio :label="'Nam'" :value="1" color="#2ca01c"></v-radio>
+                <v-radio :label="'Nữ'" :value="0" color="#2ca01c"></v-radio>
+                <v-radio :label="'Khác'" :value="2" color="#2ca01c"></v-radio>
               </div>
-            </div>
+            </v-radio-group>
+
             <!-- end gender -->
           </div>
           <div class="p-12 group-input">
@@ -132,7 +114,7 @@
     <!-- modal footer -->
     <div class="modal-footer-container">
       <div class="modal-footer">
-        <div class="btn-cancel">
+        <div class="btn-cancel" @click="$emit('handleCloseDialog')">
           <Button :content="'Hủy'" :btnWhite="true" />
         </div>
         <div class="btn-group">
@@ -158,6 +140,28 @@ export default {
     InputField,
     CheckboxField,
   },
+  data() {
+    return {
+      deparment: [
+        {
+          id: 1,
+          name: "HHH",
+        },
+        {
+          id: 2,
+          name: "HHH",
+        },
+        {
+          id: 3,
+          name: "HHH",
+        },
+        {
+          id: 4,
+          name: "HHH",
+        },
+      ],
+    };
+  },
 };
 </script>
 
@@ -182,6 +186,11 @@ export default {
   font-size: 24px;
   color: #111;
   font-weight: 700;
+}
+.radio-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .modal-combobox {
   display: flex;
@@ -230,7 +239,10 @@ export default {
   width: 60%;
 }
 .pr-6 {
-  padding-right: 6px;
+  padding-right: 6px !important;
+}
+.v-application .pr-6 {
+  padding-right: 6px !important;
 }
 .pr-12 {
   padding-right: 12px;
@@ -315,5 +327,9 @@ export default {
 }
 .btn-group {
   display: flex;
+}
+
+.gender-label {
+  margin-bottom: 8px;
 }
 </style>

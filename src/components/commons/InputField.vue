@@ -31,9 +31,9 @@ export default {
     "type",
     "value",
     "required",
-    "validateEmployeeCode",
-    "validateEmployeeFullName",
+    "autofocus",
   ],
+
   data() {
     return {
       inputValue: "",
@@ -41,20 +41,6 @@ export default {
       errorMessage: "",
       showMessage: false,
     };
-  },
-  watch: {
-    validateEmployeeCode() {
-      if (this.validateEmployeeCode) {
-        this.validate = true;
-        this.errorMessage = "Mã không được để trống";
-      } else this.validate = false;
-    },
-    validateEmployeeFullName() {
-      if (this.validateEmployeeFullName) {
-        this.validate = true;
-        this.errorMessage = "Tên không được để trống";
-      } else this.validate = false;
-    },
   },
 
   methods: {
@@ -86,6 +72,7 @@ export default {
   border: 1px solid #babec5;
   outline: none;
   width: 100%;
+  max-height: 32px;
 }
 .input-field input:focus {
   border-color: #2ca01c;
@@ -103,12 +90,7 @@ export default {
   background: url("../../assets/img/Sprites.64af8f61.svg") no-repeat -992px -357px;
   cursor: pointer;
 }
-label {
-  display: block;
-  font-size: 12px;
-  font-weight: 700;
-  margin-bottom: 4px;
-}
+
 .validateMessage {
   position: absolute;
   background: #443e3e;

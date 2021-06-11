@@ -16,18 +16,16 @@ tr:hover td {
 }
 .sticky {
   position: sticky;
+  width: 120px;
+  height: 34px;
   border-right: none;
   right: 0;
   text-align: center;
   background: #fff;
+  z-index: 100;
 }
-.line {
-  position: absolute;
-  left: -1px;
-  top: 0;
-  width: 1px;
-  background-color: #c7c7c7;
-  height: 100%;
+tbody .sticky {
+  border-left: 1px dotted #c7c7c7;
 }
 /* choose btn */
 .fix-container {
@@ -85,7 +83,6 @@ tr:hover td {
   text-transform: uppercase;
   font-size: 12px;
   font-family: "notosans-bold";
-  position: sticky;
   background: #eceef1;
   top: 0;
   color: #000;
@@ -93,7 +90,9 @@ tr:hover td {
   box-shadow: 0 1px 1px -1px #bbb;
   z-index: 100;
 }
-
+.table thead th:not(:last-child) {
+  position: sticky;
+}
 .m-250 {
   min-width: 250px;
 }
@@ -109,15 +108,21 @@ tr:hover td {
 .th-sticky {
   right: 0;
   text-align: center !important;
+  border-left: 1px solid#c7c7c7;
+  z-index: 101;
 }
-.line {
+.th-sticky th {
+  height: 34px;
+  width: 120px;
+}
+/* .line {
   position: absolute;
   left: 0;
   top: 0;
   width: 1px;
   background-color: #c7c7c7;
   height: 100%;
-}
+} */
 /* Drop down in table */
 .dropdown-icon {
   width: 16px;

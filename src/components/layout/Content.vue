@@ -9,31 +9,7 @@
             <Button content="Thêm mới nhân viên" />
           </div>
         </template>
-        <Dialog />
-        <!-- <v-card>
-          <v-card-title class="text-h5 grey lighten-2">
-            Privacy Policy
-          </v-card-title>
-
-          <v-card-text>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat. Duis aute irure dolor in
-            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-            culpa qui officia deserunt mollit anim id est laborum.
-          </v-card-text>
-
-          <v-divider></v-divider>
-
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="primary" text @click="dialog = false">
-              I accept
-            </v-btn>
-          </v-card-actions>
-        </v-card> -->
+        <Dialog @handleCloseDialog="closeDialog" />
       </v-dialog>
       <!-- End of dialog add -->
     </div>
@@ -49,6 +25,9 @@
         </div>
         <div class="refresh-btn">
           <div class="refresh-icon"></div>
+        </div>
+        <div class="export-btn">
+          <div class="excel-icon"></div>
         </div>
       </div>
       <!-- Table -->
@@ -97,15 +76,16 @@
                 Chi nhánh tài khoản ngân hàng
                 <div class="line"></div>
               </th>
-              <th class="m-120 th-sticky">
-                Chức năng
-                <div class="line"></div>
-              </th>
+              <div class="sticky th-sticky m-120">
+                <th>
+                  Chức năng
+                </th>
+              </div>
             </tr>
           </thead>
           <tbody>
             <!-- employee detail -->
-            <tr>
+            <tr v-for="item in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]" :key="item">
               <td class="table-checkbox">
                 <CheckboxField />
               </td>
@@ -119,13 +99,14 @@
               <td>asfdasfadsfasdf</td>
               <td>asfdasfadsfasdf</td>
               <td>asfdasfadsfasdf</td>
-              <td class="sticky">
-                <div class="fix-container">
-                  <span>Sửa</span>
-                  <div class="choose-btn">
-                    <div class="dropdown-icon"></div>
-                  </div>
-                  <!-- <div v-if="isShownFixSelect" class="list-select">
+              <div class="sticky">
+                <td>
+                  <div class="fix-container">
+                    <span>Sửa</span>
+                    <div class="choose-btn">
+                      <div class="dropdown-icon"></div>
+                    </div>
+                    <!-- <div v-if="isShownFixSelect" class="list-select">
           <div class="list-select-item">Nhân bản</div>
           <div
             class="list-select-item"
@@ -135,9 +116,10 @@
           </div>
           <div class="list-select-item">Ngừng sử dụng</div>
         </div> -->
-                </div>
-                <div class="line"></div>
-              </td>
+                  </div>
+                  <!-- <div class="line"></div> -->
+                </td>
+              </div>
             </tr>
             <!-- End of employee detail -->
           </tbody>
@@ -185,6 +167,13 @@ export default {
       filterValue: null, // giá trị ô filter
       dialogAddOrUpdate: false, // ẩn hiện dialog
     };
+  },
+  methods: {
+    // bắt sự kiện đóng mở dialog
+    // CreateBy : PQHieu(11/06/2021)
+    closeDialog() {
+      this.dialogAddOrUpdate = false;
+    },
   },
 };
 </script>
@@ -243,8 +232,20 @@ export default {
   background: url("../../assets/img/Sprites.64af8f61.svg") no-repeat -423px -201px;
   margin-left: 18px;
 }
+
 .refresh-icon:hover {
+  cursor: pointer;
   background-position: -1097px -88px;
+}
+.excel-icon {
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+  margin-left: 18px;
+  background: url("../../assets/img/Sprites.64af8f61.svg") no-repeat -704px -200px;
+}
+.excel-icon:hover {
+  background-position: -704px -256px;
 }
 /* Footer-pagination */
 .pagination-container {
