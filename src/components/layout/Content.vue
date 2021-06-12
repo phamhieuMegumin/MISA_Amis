@@ -9,12 +9,20 @@
             <Button content="Thêm mới nhân viên" />
           </div>
         </template>
-        <Dialog @handleCloseDialog="closeDialog" />
+        <Dialog
+          :employeeDetail="employeeDetail"
+          @handleCloseDialog="closeDialog"
+          @handleShowDialog="showDialog"
+          @handleReload="getListEmployee"
+          @resetEmployeeDetail="resetEmployeeDetail"
+          :dialogAddOrUpdate="dialogAddOrUpdate"
+          :listDepartment="listDepartment"
+        />
       </v-dialog>
       <!-- End of dialog add -->
     </div>
     <!-- main content -->
-    <Loading ref="controlLoading" />
+    <Loading ref="controlLoading" :controlShowLoading="showLoading" />
     <div class="main-content">
       <div class="search-content">
         <div class="search-wrapper">
@@ -85,7 +93,11 @@
           </thead>
           <tbody>
             <!-- employee detail -->
-            <tr v-for="(employee, index) in listEmployee" :key="index">
+            <tr
+              v-for="(employee, index) in listEmployee"
+              :key="index"
+              @dblclick="getEmployeeID(employee.employeeId)"
+            >
               <td class="table-checkbox">
                 <CheckboxField />
               </td>
@@ -175,32 +187,90 @@ export default {
       dialogAddOrUpdate: false, // ẩn hiện dialog
       isShowTableSelect: false,
       listEmployee: [], // Danh sách nhân viên
+      showLoading: false, // ẩn hiện loading
+      listDepartment: [], // danh sách phòng ban
+      employeeDetail: null,
     };
   },
-  created() {
+  mounted() {
     this.getListEmployee();
+    this.getListDepartment();
   },
   computed: {},
 
   methods: {
-    // bắt sự kiện đóng mở dialog
+    // bắt sự kiện đóng dialog của dialog con
     // CreateBy : PQHieu(11/06/2021)
     closeDialog() {
       this.dialogAddOrUpdate = false;
+    },
+
+    // bắt sự kiện mở dialog của dialog con
+    // CreateBy : PQHieu(11/06/2021)
+    showDialog() {
+      this.dialogAddOrUpdate = true;
+    },
+
+    // Bắt dự kiện chỉnh sửa
+    // CreateBy : PQHieu(12/06/2021)
+    getEmployeeID(id) {
+      this.getEmployeeInfo(id);
+    },
+
+    // Reset EmployeeDetail
+    // CreateBy : PQHieu(12/06/2021)
+    resetEmployeeDetail() {
+      this.employeeDetail = null;
     },
 
     // Lấy danh sách nhân viên
     // CreateBy : PQHieu(11/06/2021)
     async getListEmployee() {
       try {
+        this.showLoading = true; // hiện loading
         const data = await axios.get(
           "https://localhost:44376/api/v1/Employees"
         );
         this.listEmployee = data.data;
+        this.showLoading = false; // ẩn loading
+      } catch (error) {
+        this.showLoading = false; // ẩn loading khi có lỗi
+        console.log(error);
+      }
+    },
+
+    // Lấy danh sách phòng ban
+    // CreateBy : PQHieu(11/06/2021)
+    async getListDepartment() {
+      try {
+        this.showLoading = true; // hiện loading
+        const data = await axios.get(
+          "https://localhost:44376/api/v1/Departments"
+        );
+        this.listDepartment = data.data;
+        this.showLoading = false; // ẩn loading
+      } catch (error) {
+        this.showLoading = false; // ẩn loading khi có lỗi
+        console.log(error);
+      }
+    },
+
+    // Lấy thông tin nhân viên theo id
+    // CreatedBy : PQHieu(11/06/2021)
+    async getEmployeeInfo(employeeId) {
+      try {
+        this.showLoading = true; // hiện loading
+        const data = await axios.get(
+          `https://localhost:44376/api/v1/Employees/${employeeId}`
+        );
+        this.employeeDetail = data.data;
+        this.showLoading = false; // ẩn loading
+        this.showDialog();
       } catch (error) {
         console.log(error);
       }
     },
+
     // format dữ liệu ngày tháng
     // CreateBy : PQHieu(11/06/2021)
     formatDateOfBirth(employee) {

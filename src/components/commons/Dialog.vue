@@ -28,24 +28,34 @@
         <div class="modal-content-left">
           <div class="p-12 group-input">
             <div class="input-code pr-6">
-              <InputField :label="'Mã'" :required="true" />
+              <InputField
+                :label="'Mã'"
+                :required="true"
+                v-model="employee.employeeCode"
+              />
             </div>
             <div class="input-name">
-              <InputField :label="'Tên'" :required="true" :autofocus="true" />
+              <InputField
+                :label="'Tên'"
+                :required="true"
+                :autofocus="true"
+                v-model="employee.fullName"
+              />
             </div>
           </div>
           <div class="p-12">
             <label>Đơn vị</label>
             <v-autocomplete
               solo
-              :items="deparment"
-              item-text="name"
-              item-value="id"
+              v-model="employee.deparmentId"
+              :items="listDepartment"
+              item-text="deparmentName"
+              item-value="deparmentId"
               no-data-text="Không có dữ liệu"
             ></v-autocomplete>
           </div>
           <div class="p-12">
-            <InputField :label="'Chức danh'" />
+            <InputField :label="'Chức danh'" v-model="employee.positionName" />
           </div>
         </div>
         <!-- end modal content left -->
@@ -53,10 +63,14 @@
         <div class="modal-content-right">
           <div class="p-12 group-input">
             <div class="input-date pr-6">
-              <InputField :label="'Ngày sinh'" type="date" />
+              <InputField
+                :label="'Ngày sinh'"
+                type="date"
+                v-model="employee.dateOfBirth"
+              />
             </div>
             <!-- gender -->
-            <v-radio-group>
+            <v-radio-group v-model="employee.gender">
               <label class="gender-label">Giới tính</label>
               <div class="radio-container">
                 <v-radio :label="'Nam'" :value="1" color="#2ca01c"></v-radio>
@@ -69,14 +83,21 @@
           </div>
           <div class="p-12 group-input">
             <div class="input-editer pr-6">
-              <InputField :label="'Số CMND'" />
+              <InputField
+                :label="'Số CMND'"
+                v-model="employee.identityNumber"
+              />
             </div>
             <div class="input-date-rage">
-              <InputField :label="'Ngày cấp'" type="date" />
+              <InputField
+                :label="'Ngày cấp'"
+                type="date"
+                v-model="employee.identityDate"
+              />
             </div>
           </div>
           <div class=" pr-6">
-            <InputField :label="'Nơi cấp'" />
+            <InputField :label="'Nơi cấp'" v-model="employee.identityPlace" />
           </div>
         </div>
         <!-- end modal content right -->
@@ -84,28 +105,34 @@
       <!-- modal content bottom-->
       <div class="modal-content-bottom pt-24">
         <div class="p-12">
-          <InputField :label="'Địa chỉ'" />
+          <InputField :label="'Địa chỉ'" v-model="employee.address" />
         </div>
         <div class="p-12 group-input">
           <div class=" pr-6">
-            <InputField :label="'ĐT di động'" />
+            <InputField :label="'ĐT di động'" v-model="employee.phoneNumber" />
           </div>
           <div class=" pr-6">
-            <InputField :label="'ĐT cố định'" />
+            <InputField
+              :label="'ĐT cố định'"
+              v-model="employee.landlinePhone"
+            />
           </div>
           <div class=" pr-6">
-            <InputField :label="'Email'" />
+            <InputField :label="'Email'" v-model="employee.email" />
           </div>
         </div>
         <div class="p-12 group-input">
           <div class=" pr-6">
-            <InputField :label="'Tài khoản ngân hàng'" />
+            <InputField
+              :label="'Tài khoản ngân hàng'"
+              v-model="employee.bankAccount"
+            />
           </div>
           <div class=" pr-6">
-            <InputField :label="'Tên ngân hàng'" />
+            <InputField :label="'Tên ngân hàng'" v-model="employee.bankName" />
           </div>
           <div class=" pr-6">
-            <InputField :label="'Chi nhánh'" />
+            <InputField :label="'Chi nhánh'" v-model="employee.bankBranch" />
           </div>
         </div>
       </div>
@@ -118,10 +145,10 @@
           <Button :content="'Hủy'" :btnWhite="true" />
         </div>
         <div class="btn-group">
-          <div class="pr-12">
+          <div class="pr-12" @click="handleAddOrUpdate">
             <Button :content="'Cất'" :btnWhite="true" />
           </div>
-          <div>
+          <div @click="handleSaveAndAdd">
             <Button :content="'Cất và Thêm'" />
           </div>
         </div>
@@ -134,33 +161,98 @@
 import Button from "../commons/Button.vue";
 import InputField from "../commons/InputField.vue";
 import CheckboxField from "../commons/CheckboxField.vue";
+import DefaultEmployee from "../constant/DefaultEmployee";
+import axios from "axios";
 export default {
+  props: ["dialogAddOrUpdate", "listDepartment", "employeeDetail"],
   components: {
     Button,
     InputField,
     CheckboxField,
   },
+  created() {
+    if (this.employeeDetail) {
+      this.employee = { ...this.employeeDetail };
+    } else this.getNewEmployeeCode();
+  },
+  watch: {
+    // reset lại dialog
+    dialogAddOrUpdate() {
+      if (!this.dialogAddOrUpdate) {
+        this.employee = { ...DefaultEmployee };
+        this.$emit("resetEmployeeDetail");
+      } else {
+        if (!this.employeeDetail) this.getNewEmployeeCode(); // lấy mã nhân viên khi dialog được show
+      }
+    },
+    employeeDetail() {
+      console.log(this.employeeDetail);
+      if (this.employeeDetail) {
+        this.employee = { ...this.employeeDetail };
+      }
+    },
+  },
+
   data() {
     return {
-      deparment: [
-        {
-          id: 1,
-          name: "HHH",
-        },
-        {
-          id: 2,
-          name: "HHH",
-        },
-        {
-          id: 3,
-          name: "HHH",
-        },
-        {
-          id: 4,
-          name: "HHH",
-        },
-      ],
+      // Nhân viên và các trường của nhân viên
+      employee: {
+        employeeCode: "",
+        fullName: "",
+        deparmentId: "",
+        gender: 1,
+        dateOfBirth: null,
+        identityNumber: "",
+        identityDate: null,
+        identityPlace: "",
+        positionName: "",
+        address: "",
+        phoneNumber: "",
+        landlinePhone: "",
+        email: "",
+        bankAccount: "",
+        bankName: "",
+        bankBranch: "",
+      },
     };
+  },
+  methods: {
+    // Thay đổi chế độ cất và thêm
+    // CreatedBy : PQHieu(12/06/2021)
+    handleSaveAndAdd() {
+      this.handleSaveAndAdd();
+      this.$emit("handleShowDialog"); // Hiển thị dialog sau khi cất
+    },
+
+    // thêm hoặc sửa nhân viên
+    // CreatedBy : PQHieu(12/06/2021)
+    async handleAddOrUpdate() {
+      try {
+        await axios({
+          method: "post",
+          url: "https://localhost:44376/api/v1/Employees",
+          data: this.employee,
+        });
+        this.$emit("handleCloseDialog"); // Ẩn dialog là resetdialog
+        this.$emit("handleReload"); // load laị dữ liệu
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    // Lấy mã nhân viên mới
+    // CreatedBy: PQHieu(12/06/2021)
+    async getNewEmployeeCode() {
+      try {
+        this.showLoading = true; // hiện loading
+        const data = await axios.get(
+          "https://localhost:44376/api/v1/Employees/NewCode"
+        );
+        this.employee.employeeCode = data.data;
+        this.showLoading = false; // ẩn loading
+      } catch (error) {
+        console.log(error);
+      }
+    },
   },
 };
 </script>

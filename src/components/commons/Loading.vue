@@ -8,6 +8,7 @@
 
 <script>
 export default {
+  props: ["controlShowLoading"],
   data() {
     return {
       isShowLoading: false,
@@ -19,6 +20,13 @@ export default {
     },
     hideLoading() {
       this.isShowLoading = false;
+    },
+  },
+  watch: {
+    controlShowLoading() {
+      if (this.controlShowLoading) {
+        this.showLoading();
+      } else this.hideLoading();
     },
   },
 };
