@@ -136,9 +136,67 @@ tr:hover td {
   height: 47px;
 }
 /* table select */
+
 .v-text-field.v-text-field--enclosed:not(.v-text-field--rounded)
   > .v-input__control
   > .v-input__slot,
 .v-text-field.v-text-field--enclosed .v-text-field__details {
   padding: 0 !important;
+}
+
+/* dropdown in table */
+.choose-btn {
+  padding: none !important;
+}
+.choose-btn .v-select__selections {
+  display: none !important;
+}
+.choose-btn .v-text-field.v-text-field--solo .v-label {
+  display: none !important;
+}
+.choose-btn .v-input__append-inner {
+  padding-left: 0px !important;
+  margin-left: 0px !important;
+}
+.choose-btn .v-select__slot {
+  width: 24px !important;
+}
+.choose-btn .v-input__icon {
+  width: 26px !important;
+  height: 16px !important;
+  position: relative;
+  bottom: 8px;
+}
+.v-input__icon:hover {
+  background-color: none !important;
+}
+.choose-btn
+  .v-text-field.v-text-field--solo:not(.v-text-field--solo-flat)
+  > .v-input__control
+  > .v-input__slot {
+  border: none !important;
+}
+.choose-btn .v-input {
+  height: 16px !important;
+}
+.choose-btn
+  .theme--light.v-text-field--solo
+  > .v-input__control
+  > .v-input__slot {
+  background-color: transparent !important;
+}
+.choose-btn .v-text-field__details {
+  display: none;
+}
+.v-input--is-focused .v-input__icon {
+  border: 1px solid #0075cb;
+}
+
+.choose-btn .theme--light.v-icon {
+  color: #0075cb;
+  position: relative;
+  right: 0.5px;
+}
+.choose-btn .v-icon.v-icon {
+  font-size: 22px !important;
 }

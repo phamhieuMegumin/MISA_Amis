@@ -178,6 +178,13 @@ export default {
   created() {
     if (this.employeeDetail) {
       this.employee = { ...this.employeeDetail };
+      // format giá trị ngày tháng
+      this.employee.dateOfBirth = this.formatDateEmployee(
+        this.employee.dateOfBirth
+      );
+      this.employee.identityDate = this.formatDateEmployee(
+        this.employee.identityDate
+      );
     } else this.getNewEmployeeCode();
   },
   watch: {
@@ -192,8 +199,15 @@ export default {
     },
     employeeDetail() {
       console.log(this.employeeDetail);
+      // format giá trị ngày tháng
       if (this.employeeDetail) {
         this.employee = { ...this.employeeDetail };
+        this.employee.dateOfBirth = this.formatDateEmployee(
+          this.employee.dateOfBirth
+        );
+        this.employee.identityDate = this.formatDateEmployee(
+          this.employee.identityDate
+        );
       }
     },
   },
@@ -284,6 +298,26 @@ export default {
       } catch (error) {
         console.log(error);
       }
+    },
+
+    // format lại giá trị ngày tháng để hiển thị
+    // CreatedBy : PQHieu(12/06/2021)
+    formatDateEmployee(date) {
+      if (date) {
+        return this.formatDate(date);
+      }
+    },
+
+    // chuyển đổi giá trị ngày tháng về yyyy-mm-dd
+    // CreatedBy : PQHieu(12/06/2021)
+    formatDate(date) {
+      const newDate = new Date(date);
+      let strDay = newDate.getDate();
+      let strMonth = newDate.getMonth() + 1;
+      let strYear = newDate.getFullYear();
+      if (strDay < 10) strDay = `0${strDay}`;
+      if (strMonth < 10) strMonth = `0${strMonth}`;
+      return `${strYear}-${strMonth}-${strDay}`;
     },
   },
 };

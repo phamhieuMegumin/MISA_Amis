@@ -119,21 +119,15 @@
 
                   <div class="choose-btn">
                     <!-- dropdown -->
-                    <div
-                      class="dropdown-icon"
-                      tabindex="0"
-                      @click="isShowTableSelect = !isShowTableSelect"
-                      @focusout="isShowTableSelect = false"
-                    >
-                      <div v-if="isShowTableSelect" class="list-select">
-                        <div class="list-select-item">Nhân bản</div>
-                        <div class="list-select-item">
-                          Xóa
-                        </div>
-                        <div class="list-select-item">Ngừng sử dụng</div>
-                      </div>
-                    </div>
-
+                    <v-select
+                      :items="selectOptions"
+                      item-value="id"
+                      v-model="selectedValue"
+                      item-text="name"
+                      label="Solo field"
+                      dense
+                      solo
+                    ></v-select>
                     <!-- End of dropdown -->
                   </div>
                 </div>
@@ -193,6 +187,22 @@ export default {
       listDepartment: [], // danh sách phòng ban
       employeeDetail: null, // thông tin nhân viên dùng để sửa
       modeUpdate: false, // thay đổi thêm sang update mode
+      selectedValue: null, // lựa chọn các chức năng
+      // Các chức năng
+      selectOptions: [
+        {
+          id: 1,
+          name: "Nhân bản",
+        },
+        {
+          id: 2,
+          name: "Xóa",
+        },
+        {
+          id: 3,
+          name: "Ngừng sử dụng",
+        },
+      ],
     };
   },
   mounted() {
