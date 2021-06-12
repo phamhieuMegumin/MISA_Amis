@@ -164,7 +164,12 @@ import CheckboxField from "../commons/CheckboxField.vue";
 import DefaultEmployee from "../constant/DefaultEmployee";
 import axios from "axios";
 export default {
-  props: ["dialogAddOrUpdate", "listDepartment", "employeeDetail"],
+  props: [
+    "dialogAddOrUpdate",
+    "listDepartment",
+    "employeeDetail",
+    "modeUpdate",
+  ],
   components: {
     Button,
     InputField,
@@ -197,6 +202,7 @@ export default {
     return {
       // Nhân viên và các trường của nhân viên
       employee: {
+        employeeId: "",
         employeeCode: "",
         fullName: "",
         deparmentId: "",
@@ -227,6 +233,15 @@ export default {
     // thêm hoặc sửa nhân viên
     // CreatedBy : PQHieu(12/06/2021)
     async handleAddOrUpdate() {
+      console.log(this.modeUpdate);
+      if (!this.modeUpdate) {
+        this.handleAdd();
+      } else this.handelUpdate();
+    },
+
+    // thêm nhân viên
+    // CreatedBy : PQHieu(12/06/2021)
+    async handleAdd() {
       try {
         await axios({
           method: "post",
@@ -239,6 +254,23 @@ export default {
         console.log(error);
       }
     },
+
+    // sửa nhân viên
+    // CreatedBy : PQHieu(12/06/2021)
+    async handelUpdate() {
+      try {
+        await axios({
+          method: "put",
+          url: `https://localhost:44376/api/v1/Employees/${this.employee.employeeId}`,
+          data: this.employee,
+        });
+        this.$emit("handleCloseDialog"); // Ẩn dialog là resetdialog
+        this.$emit("handleReload"); // load laị dữ liệu
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
     // Lấy mã nhân viên mới
     // CreatedBy: PQHieu(12/06/2021)
     async getNewEmployeeCode() {

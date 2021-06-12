@@ -15,6 +15,7 @@
           @handleShowDialog="showDialog"
           @handleReload="getListEmployee"
           @resetEmployeeDetail="resetEmployeeDetail"
+          :modeUpdate="modeUpdate"
           :dialogAddOrUpdate="dialogAddOrUpdate"
           :listDepartment="listDepartment"
         />
@@ -114,7 +115,8 @@
               <td class="sticky no--right-border">
                 <div class="border-left border-left--dotted"></div>
                 <div class="fix-container">
-                  <span>Sửa</span>
+                  <span @click="getEmployeeID(employee.employeeId)">Sửa</span>
+
                   <div class="choose-btn">
                     <!-- dropdown -->
                     <div
@@ -189,7 +191,8 @@ export default {
       listEmployee: [], // Danh sách nhân viên
       showLoading: false, // ẩn hiện loading
       listDepartment: [], // danh sách phòng ban
-      employeeDetail: null,
+      employeeDetail: null, // thông tin nhân viên dùng để sửa
+      modeUpdate: false, // thay đổi thêm sang update mode
     };
   },
   mounted() {
@@ -214,13 +217,15 @@ export default {
     // Bắt dự kiện chỉnh sửa
     // CreateBy : PQHieu(12/06/2021)
     getEmployeeID(id) {
+      this.modeUpdate = true;
       this.getEmployeeInfo(id);
     },
 
-    // Reset EmployeeDetail
+    // Reset EmployeeDetail and mode update
     // CreateBy : PQHieu(12/06/2021)
     resetEmployeeDetail() {
       this.employeeDetail = null;
+      this.modeUpdate = false;
     },
 
     // Lấy danh sách nhân viên
@@ -407,6 +412,13 @@ export default {
 }
 .pag-btn.active {
   color: #111;
+  cursor: pointer;
+}
+.fix-container {
+  position: relative;
+  z-index: 5;
+}
+.fix-container span {
   cursor: pointer;
 }
 </style>
