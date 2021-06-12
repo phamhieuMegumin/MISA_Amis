@@ -94,46 +94,12 @@
           </thead>
           <tbody>
             <!-- employee detail -->
-            <tr
+            <Employee
               v-for="(employee, index) in listEmployee"
               :key="index"
-              @dblclick="getEmployeeID(employee.employeeId)"
-            >
-              <td class="table-checkbox">
-                <CheckboxField />
-              </td>
-              <td>{{ employee.employeeCode }}</td>
-              <td>{{ employee.fullName }}</td>
-              <td>{{ employee.genderName }}</td>
-              <td>{{ formatDateOfBirth(employee) }}</td>
-              <td>{{ employee.identityNumber }}</td>
-              <td>{{ employee.positionName }}</td>
-              <td>asdfsdf</td>
-              <td>{{ employee.bankAccount }}</td>
-              <td>{{ employee.bankName }}</td>
-              <td class="no--right-border">{{ employee.bankBranch }}</td>
-              <td class="sticky no--right-border">
-                <div class="border-left border-left--dotted"></div>
-                <div class="fix-container">
-                  <span @click="getEmployeeID(employee.employeeId)">Sửa</span>
-
-                  <div class="choose-btn">
-                    <!-- dropdown -->
-                    <v-select
-                      :items="selectOptions"
-                      item-value="id"
-                      v-model="selectedValue"
-                      item-text="name"
-                      label="Solo field"
-                      dense
-                      solo
-                    ></v-select>
-                    <!-- End of dropdown -->
-                  </div>
-                </div>
-                <!-- <div class="line"></div> -->
-              </td>
-            </tr>
+              :employee="employee"
+              @handleGetEmployeeID="getEmployeeID"
+            />
             <!-- End of employee detail -->
           </tbody>
         </table>
@@ -175,8 +141,9 @@ import Dialog from "../commons/Dialog.vue";
 import Loading from "../commons/Loading.vue";
 import axios from "axios";
 import "../../css/table.css";
+import Employee from "../Employee/Employee.vue";
 export default {
-  components: { CheckboxField, Button, InputField, Dialog, Loading },
+  components: { CheckboxField, Button, InputField, Dialog, Loading, Employee },
   data() {
     return {
       filterValue: null, // giá trị ô filter
@@ -187,22 +154,6 @@ export default {
       listDepartment: [], // danh sách phòng ban
       employeeDetail: null, // thông tin nhân viên dùng để sửa
       modeUpdate: false, // thay đổi thêm sang update mode
-      selectedValue: null, // lựa chọn các chức năng
-      // Các chức năng
-      selectOptions: [
-        {
-          id: 1,
-          name: "Nhân bản",
-        },
-        {
-          id: 2,
-          name: "Xóa",
-        },
-        {
-          id: 3,
-          name: "Ngừng sử dụng",
-        },
-      ],
     };
   },
   mounted() {
@@ -284,21 +235,6 @@ export default {
       } catch (error) {
         console.log(error);
       }
-    },
-
-    // format dữ liệu ngày tháng
-    // CreateBy : PQHieu(11/06/2021)
-    formatDateOfBirth(employee) {
-      if (employee.dateOfBirth) {
-        const newDate = new Date(employee.dateOfBirth);
-        let strDay = newDate.getDate();
-        let strMonth = newDate.getMonth() + 1;
-        let strYear = newDate.getFullYear();
-        if (strDay < 10) strDay = `0${strDay}`;
-        if (strMonth < 10) strMonth = `0${strMonth}`;
-        return `${strDay}/${strMonth}/${strYear}`;
-      }
-      return null;
     },
   },
 };
@@ -422,13 +358,6 @@ export default {
 }
 .pag-btn.active {
   color: #111;
-  cursor: pointer;
-}
-.fix-container {
-  position: relative;
-  z-index: 5;
-}
-.fix-container span {
   cursor: pointer;
 }
 </style>
