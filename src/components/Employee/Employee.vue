@@ -41,6 +41,7 @@
 
 <script>
 import CheckboxField from "../commons/CheckboxField.vue";
+import axios from "axios";
 export default {
   props: ["employee"],
   components: {
@@ -66,11 +67,38 @@ export default {
       selectedValue: null, // lựa chọn các chức năng
     };
   },
+  watch: {
+    selectedValue() {
+      if (this.selectedValue == 2) {
+        this.deleteEmployee(this.employee.employeeId);
+      }
+      setTimeout(() => {
+        this.selectedValue = 0;
+      }, 200);
+    },
+  },
   methods: {
     // Lấy id nhân viên
     // CreateBy : PQHieu(11/06/2021)
     getEmployeeInfoId(id) {
       this.$emit("handleGetEmployeeID", id);
+    },
+
+    // Xóa nhân viên theo id
+    // CreatedBy : PQHieu(11/06/2021)
+    async deleteEmployee(employeeId) {
+      try {
+        this.showLoading = true; // hiện loading
+        await axios({
+          method: "delete",
+          url: `https://localhost:44376/api/v1/Employees/${this.employee.employeeId}`,
+          data: employeeId,
+        });
+        this.showLoading = false; // ẩn loading
+        this.$emit("handleReload"); // reload sau khi xóa
+      } catch (error) {
+        console.log(error);
+      }
     },
 
     // format dữ liệu ngày tháng

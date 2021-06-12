@@ -99,6 +99,7 @@
               :key="index"
               :employee="employee"
               @handleGetEmployeeID="getEmployeeID"
+              @handleReload="getListEmployee"
             />
             <!-- End of employee detail -->
           </tbody>
@@ -112,7 +113,27 @@
               <!-- <DropdownField :listOption="listOption" nameField="ItemPerPage" /> -->
             </div>
             <div class="paginations">
-              <div>
+              <button
+                class="pagination-prev-btn"
+                :class="[page > 1 ? 'active' : null]"
+                @click="handlePrev"
+              >
+                Trước
+              </button>
+              <v-pagination
+                v-model="page"
+                :length="10"
+                :total-visible="6"
+                color="#fff"
+              ></v-pagination>
+              <button
+                class="pagination-next-btn"
+                :class="[page < 10 ? 'active' : null]"
+                @click="handleNext"
+              >
+                Sau
+              </button>
+              <!-- <div>
                 Trước
               </div>
               <div class="list-btn-pagination">
@@ -122,7 +143,7 @@
               </div>
               <div>
                 Sau
-              </div>
+              </div> -->
             </div>
           </div>
         </div>
@@ -154,6 +175,7 @@ export default {
       listDepartment: [], // danh sách phòng ban
       employeeDetail: null, // thông tin nhân viên dùng để sửa
       modeUpdate: false, // thay đổi thêm sang update mode
+      page: 1, // trang hiện tại
     };
   },
   mounted() {
@@ -187,6 +209,22 @@ export default {
     resetEmployeeDetail() {
       this.employeeDetail = null;
       this.modeUpdate = false;
+    },
+
+    // Chuyển đến page đằng trước
+    // CreatedBy : PQHieu(12/6/2021)
+    handlePrev() {
+      if (this.page > 1) {
+        this.page--;
+      }
+    },
+
+    // Chuyển đến page phía sau
+    // CreatedBy : PQHieu(12/6/2021)
+    handleNext() {
+      if (this.page < 10) {
+        this.page++;
+      }
     },
 
     // Lấy danh sách nhân viên
@@ -332,6 +370,25 @@ export default {
 .dropdown-pagiantion {
   margin: 0 16px;
   width: 200px;
+}
+/* Pagionation */
+.pagination-prev-btn,
+.pagination-next-btn {
+  position: relative;
+  color: #9e9e9e;
+  cursor: default;
+  user-select: none;
+}
+.pagination-prev-btn {
+  left: 42px;
+}
+.pagination-next-btn {
+  right: 42px;
+}
+.pagination-prev-btn.active,
+.pagination-next-btn.active {
+  cursor: pointer;
+  color: #111;
 }
 .pag-btn {
   margin-right: 13px;

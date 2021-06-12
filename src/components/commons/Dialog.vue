@@ -162,6 +162,7 @@ import Button from "../commons/Button.vue";
 import InputField from "../commons/InputField.vue";
 import CheckboxField from "../commons/CheckboxField.vue";
 import DefaultEmployee from "../constant/DefaultEmployee";
+import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
 export default {
   props: [
@@ -256,6 +257,7 @@ export default {
     // thêm nhân viên
     // CreatedBy : PQHieu(12/06/2021)
     async handleAdd() {
+      this.employee.employeeId = uuidv4();
       try {
         await axios({
           method: "post",

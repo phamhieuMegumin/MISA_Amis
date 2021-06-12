@@ -188,7 +188,7 @@ tr:hover td {
 .choose-btn .v-text-field__details {
   display: none;
 }
-.v-input--is-focused .v-input__icon {
+.choose-btn .v-input--is-focused .v-input__icon {
   border: 1px solid #0075cb;
 }
 
