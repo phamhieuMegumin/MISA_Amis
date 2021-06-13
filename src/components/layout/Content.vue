@@ -20,12 +20,24 @@
               :modeUpdate="modeUpdate"
               :dialogAddOrUpdate="dialogAddOrUpdate"
               :listDepartment="listDepartment"
+              @onNotify="handleNotify"
             />
           </v-card>
         </v-dialog>
       </div>
-
       <!-- End of dialog add -->
+
+      <!-- Dialog notify -->
+      <!--  -->
+      <v-dialog v-model="dialogNotify" width="444px">
+        <DialogNotify
+          @closeDialog="handleCloseDialog"
+          type="notify-success"
+          :notifyMessage="notifyMessage"
+        />
+      </v-dialog>
+      <!--  -->
+      <!-- End of dialog notify -->
     </div>
     <!-- main content -->
     <Loading ref="controlLoading" :controlShowLoading="showLoading" />
@@ -167,6 +179,7 @@ import "../../css/table.css";
 import Employee from "../Employee/Employee.vue";
 import queryString from "query-string";
 import CustomSelect from "../commons/CustomSelect.vue";
+import DialogNotify from "../commons/DialogNotify.vue";
 export default {
   components: {
     CheckboxField,
@@ -176,6 +189,7 @@ export default {
     Loading,
     Employee,
     CustomSelect,
+    DialogNotify,
   },
   data() {
     return {
@@ -190,7 +204,8 @@ export default {
       pageInt: 1, // trang hiện tại
       pageSize: 20, // số bản ghi trên page
       totalItem: 0, // số lượng bản ghi được trả về
-      dialogNotify: true,
+      dialogNotify: false, // hiển thị dialog thông báo cho người dùng
+      notifyMessage: "", // message được hiển thị trên dialog
       // Giá trị option truyền vào customSelect
       options: [
         {
@@ -256,6 +271,12 @@ export default {
       this.dialogAddOrUpdate = true;
     },
 
+    // đóng dialog notify
+    // CreatedBy : PQHieu(13/06/2021)
+    handleCloseDialog() {
+      this.dialogNotify = false;
+    },
+
     // Bắt dự kiện chỉnh sửa
     // CreateBy : PQHieu(12/06/2021)
     getEmployeeID(id) {
@@ -291,6 +312,14 @@ export default {
     handleChangeValue(value) {
       this.pageSize = value;
     },
+
+    // Hiển thị thông bán cho người dùng
+    // CreatedBy : PQHieu(13/6/2021)
+    handleNotify(message) {
+      this.notifyMessage = message;
+      this.dialogNotify = true;
+    },
+
     // Lấy danh sách nhân viên
     // CreateBy : PQHieu(11/06/2021)
     async getListEmployee() {

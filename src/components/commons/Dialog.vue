@@ -1,5 +1,27 @@
 <template>
   <div class="modal-container">
+    <!-- Dialog error -->
+    <!--  -->
+    <v-dialog v-model="dialogNotifyError" width="444px">
+      <DialogNotify
+        @closeDialog="handleCloseErrorDialog"
+        type="notify-error"
+        :notifyMessage="notifyMessage"
+      />
+    </v-dialog>
+    <!--  -->
+    <!-- End of dialog error -->
+    <!-- Dialog danger -->
+    <!--  -->
+    <v-dialog v-model="dialogNotifyDanger" width="444px">
+      <DialogNotify
+        @closeDialog="handleCloseDangerDialog"
+        type="notify-danger"
+        :notifyMessage="notifyMessage"
+      />
+    </v-dialog>
+    <!--  -->
+    <!-- End of dialog danger -->
     <div class="modal-header-container">
       <div class="modal-header">
         <h3 class="modal-title">Thông tin nhân viên</h3>
@@ -162,6 +184,7 @@ import Button from "../commons/Button.vue";
 import InputField from "../commons/InputField.vue";
 import CheckboxField from "../commons/CheckboxField.vue";
 import DefaultEmployee from "../constant/DefaultEmployee";
+import DialogNotify from "../commons/DialogNotify.vue";
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
 export default {
@@ -175,6 +198,7 @@ export default {
     Button,
     InputField,
     CheckboxField,
+    DialogNotify,
   },
   created() {
     if (this.employeeDetail) {
@@ -234,6 +258,9 @@ export default {
         bankName: "",
         bankBranch: "",
       },
+      notifyMessage: "", // Nội dùng dialog
+      dialogNotifyError: false, // hiển thị dialog thông báo lỗi
+      dialogNotifyDanger: false, // hiển thị dialog cảnh báo
     };
   },
   methods: {
@@ -244,6 +271,10 @@ export default {
       this.$emit("handleShowDialog"); // Hiển thị dialog sau khi cất
     },
 
+    handleCloseDangerDialog() {
+      this.dialogNotifyDanger = false;
+    },
+    handleCloseErrorDialog() {},
     // thêm hoặc sửa nhân viên
     // CreatedBy : PQHieu(12/06/2021)
     async handleAddOrUpdate() {
@@ -263,9 +294,15 @@ export default {
           data: this.employee,
         });
         this.$emit("handleCloseDialog"); // Ẩn dialog là resetdialog
+        this.$emit("onNotify", "Nhân viên đã được thêm thành công");
         this.$emit("handleReload"); // load laị dữ liệu
       } catch (error) {
-        console.log(error);
+        if (error.response.status == "400") {
+          if (error.response.data.data.detail.fieldNotValid == "EmployeeCode") {
+            this.notifyMessage = error.response.data.userMsg;
+            this.dialogNotifyDanger = true; // hiển thị dialog cảnh báo
+          }
+        }
       }
     },
 
@@ -279,6 +316,7 @@ export default {
           data: this.employee,
         });
         this.$emit("handleCloseDialog"); // Ẩn dialog là resetdialog
+        this.$emit("onNotify", "Nhân viên đã được cập nhật");
         this.$emit("handleReload"); // load laị dữ liệu
       } catch (error) {
         console.log(error);

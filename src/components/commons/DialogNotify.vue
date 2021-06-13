@@ -1,29 +1,60 @@
 <template>
   <div class="modal-container">
     <div class="modal-content">
-      <div class="logo-message"></div>
+      <div
+        class="logo-message"
+        :class="[
+          type == 'notify-success' ? 'logo-success' : null,
+          type == 'confirm' ? 'logo-danger' : null,
+          type == 'notify-error' ? 'logo-error' : null,
+          type == 'notify-danger' ? 'logo-danger' : null,
+        ]"
+      ></div>
       <div class="modal-message">
-        <p v-if="type === 'confirm'">
+        <p v-if="type == 'confirm'">
           Bạn có thực sự muốn xóa Nhân viên
           <span> {{ employeeCode }}</span>
           không?
         </p>
-        <p v-if="type === 'notify'">
-          Mã nhân viên {{ employeeCodeNotify }} đã tồn tại trong hệ thống, vui
-          lòng kiểm tra lại
+        <p v-if="type == 'notify-danger'">
+          {{ notifyMessage }}
+        </p>
+        <p v-if="type == 'notify-success'">
+          {{ notifyMessage }}
+        </p>
+        <p v-if="type == 'notify-error'">
+          {{ notifyMessage }}
         </p>
       </div>
     </div>
     <div class="line"></div>
-    <div class="modal-bottom" :class="type === 'notify' ? 'notify-bottom' : ''">
+    <div
+      class="modal-bottom"
+      :class="[
+        type == 'confirm' ? 'notify-space' : null,
+        type == 'notify-success' ? 'notify-center' : null,
+        type == 'notify-error' ? 'notify-center' : null,
+        type == 'notify-danger' ? 'notify-end' : null,
+      ]"
+    >
       <div v-if="type == 'confirm'" @click="$emit('closeDialog')">
         <Button :content="'Không'" :btnWhite="true" />
       </div>
       <div v-if="type === 'confirm'" @click="$emit('onDelete')">
         <Button :content="'Có'" />
       </div>
-      <div class="notify-btn" v-if="type === 'notify'">
-        <Button :content="'Đồng ý'" />
+      <div
+        class="notify-btn"
+        v-if="type != 'confirm'"
+        @click="$emit('closeDialog')"
+      >
+        <Button
+          :content="
+            type == 'notify-error' || type == 'notify-success'
+              ? 'Đóng'
+              : 'Đồng ý'
+          "
+        />
       </div>
     </div>
   </div>
@@ -33,11 +64,10 @@
 import Button from "./Button.vue";
 export default {
   components: { Button },
-  props: ["employeeCode"],
+  props: ["employeeCode", "type", "notifyMessage"],
   data() {
     return {
       confirmEmployeeCode: "111",
-      type: "confirm",
       employeeCodeNotify: "111",
     };
   },
@@ -59,7 +89,19 @@ export default {
   height: 48px;
   min-width: 48px;
   min-height: 48px;
-  background: url("../../assets/img/Sprites.64af8f61.svg") no-repeat -592px -456px;
+  background: url("../../assets/img/Sprites.64af8f61.svg") no-repeat;
+}
+.logo-danger {
+  background-position: -592px -456px;
+}
+.logo-success {
+  background-position: -981px -456px;
+}
+.logo-error {
+  background-position: -24px -954px;
+}
+.logo-danger {
+  background-position: -592px -456px;
 }
 .modal-message {
   overflow: auto;
@@ -77,7 +119,13 @@ export default {
   display: flex;
   justify-content: space-between;
 }
-.modal-bottom.notify-bottom {
+.modal-bottom.notify-end {
   justify-content: flex-end;
+}
+.modal-bottom.notify-center {
+  justify-content: center;
+}
+.modal-bottom.notify-space {
+  justify-content: space-between;
 }
 </style>

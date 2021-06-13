@@ -36,6 +36,7 @@
               :employeeCode="employee.employeeCode"
               @closeDialog="handleCloseDialog"
               @onDelete="deleteEmployee(employee.employeeId)"
+              type="confirm"
             />
           </v-dialog>
           <!-- End of dialog test -->
