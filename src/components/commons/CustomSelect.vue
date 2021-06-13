@@ -24,7 +24,7 @@
     <div class="combobox-field" @click="isShow = !isShow">
       {{ label_value }}
       <div class="select-container">
-        <div class="dropdown-icon"></div>
+        <div class="dropdown-icon" :class="isShow ? 'active' : null"></div>
       </div>
     </div>
   </div>
@@ -166,6 +166,10 @@ export default {
   width: 100%;
   height: 100%;
   background: url("../../assets/img/Sprites.64af8f61.svg") no-repeat -552px -351px;
+  transition: all linear 0.1s;
+}
+.dropdown-icon.active {
+  transform: rotate(180deg);
 }
 .select-container:hover {
   background: #e0e0e0;
