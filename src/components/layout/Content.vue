@@ -112,6 +112,14 @@
           <div class="pagination-wrapper">
             <div class="dropdown-pagiantion">
               <!-- <DropdownField :listOption="listOption" nameField="ItemPerPage" /> -->
+              <CustomSelect
+                tabindex="0"
+                label_key="name"
+                value_key="value"
+                :options="options"
+                v-model="pageSize"
+                @changeValue="handleChangeValue"
+              />
             </div>
             <div class="paginations">
               <button
@@ -123,8 +131,7 @@
               </button>
               <v-pagination
                 v-model="pageInt"
-                :length="totalPage"
-                :total-visible="8"
+                :length="8"
                 color="#fff"
               ></v-pagination>
               <button
@@ -154,8 +161,17 @@ import axios from "axios";
 import "../../css/table.css";
 import Employee from "../Employee/Employee.vue";
 import queryString from "query-string";
+import CustomSelect from "../commons/CustomSelect.vue";
 export default {
-  components: { CheckboxField, Button, InputField, Dialog, Loading, Employee },
+  components: {
+    CheckboxField,
+    Button,
+    InputField,
+    Dialog,
+    Loading,
+    Employee,
+    CustomSelect,
+  },
   data() {
     return {
       filterValue: null, // giá trị ô filter
@@ -168,7 +184,30 @@ export default {
       modeUpdate: false, // thay đổi thêm sang update mode
       pageInt: 1, // trang hiện tại
       pageSize: 20, // số bản ghi trên page
-      totalItem: null, // số lượng bản ghi được trả về
+      totalItem: 0, // số lượng bản ghi được trả về
+
+      options: [
+        {
+          value: 10,
+          name: "10 bản ghi trên 1 trang",
+        },
+        {
+          value: 20,
+          name: "20 bản ghi trên 1 trang",
+        },
+        {
+          value: 30,
+          name: "30 bản ghi trên 1 trang",
+        },
+        {
+          value: 50,
+          name: "50 bản ghi trên 1 trang",
+        },
+        {
+          value: 100,
+          name: "100 bản ghi trên 1 trang",
+        },
+      ],
     };
   },
   mounted() {
@@ -236,6 +275,9 @@ export default {
       }
     },
 
+    handleChangeValue(value) {
+      this.pageSize = value;
+    },
     // Lấy danh sách nhân viên
     // CreateBy : PQHieu(11/06/2021)
     async getListEmployee() {
@@ -372,6 +414,7 @@ export default {
 }
 .pagination-wrapper {
   display: flex;
+  align-items: center;
 }
 .paginations {
   display: flex;
