@@ -42,11 +42,14 @@
         ></div>
       </div>
     </div>
+    <!--  -->
     <!-- end modal header -->
     <!-- modal content -->
+    <!--  -->
     <div class="modal-content-wrapper">
       <div class="modal-content">
         <!-- modal content left -->
+        <!--  -->
         <div class="modal-content-left">
           <div class="p-12 group-input">
             <div class="input-code pr-6">
@@ -80,8 +83,10 @@
             <InputField :label="'Chức danh'" v-model="employee.positionName" />
           </div>
         </div>
+        <!--  -->
         <!-- end modal content left -->
         <!-- modal content right -->
+        <!--  -->
         <div class="modal-content-right">
           <div class="p-12 group-input">
             <div class="input-date pr-6">
@@ -92,6 +97,7 @@
               />
             </div>
             <!-- gender -->
+            <!--  -->
             <v-radio-group v-model="employee.gender">
               <label class="gender-label">Giới tính</label>
               <div class="radio-container">
@@ -100,7 +106,7 @@
                 <v-radio :label="'Khác'" :value="2" color="#2ca01c"></v-radio>
               </div>
             </v-radio-group>
-
+            <!--  -->
             <!-- end gender -->
           </div>
           <div class="p-12 group-input">
@@ -122,9 +128,11 @@
             <InputField :label="'Nơi cấp'" v-model="employee.identityPlace" />
           </div>
         </div>
+        <!--  -->
         <!-- end modal content right -->
       </div>
       <!-- modal content bottom-->
+      <!--  -->
       <div class="modal-content-bottom pt-24">
         <div class="p-12">
           <InputField :label="'Địa chỉ'" v-model="employee.address" />
@@ -159,8 +167,10 @@
         </div>
       </div>
     </div>
+    <!--  -->
     <!-- end modal content -->
     <!-- modal footer -->
+    <!--  -->
     <div class="modal-footer-container">
       <div class="modal-footer">
         <div class="btn-cancel" @click="$emit('handleCloseDialog')">
@@ -271,16 +281,48 @@ export default {
       this.$emit("handleShowDialog"); // Hiển thị dialog sau khi cất
     },
 
+    // đóng dialog cảnh báo
+    // CreatedBy : PQHieu(12/6/2021)
     handleCloseDangerDialog() {
       this.dialogNotifyDanger = false;
     },
-    handleCloseErrorDialog() {},
+
+    // đóng dialog báo lỗi
+    // CreatedBy : PQHieu(12/6/2021)
+    handleCloseErrorDialog() {
+      this.dialogNotifyError = false;
+    },
+
     // thêm hoặc sửa nhân viên
     // CreatedBy : PQHieu(12/06/2021)
     async handleAddOrUpdate() {
-      if (!this.modeUpdate) {
-        this.handleAdd();
-      } else this.handelUpdate();
+      // kiểm tra validate dữ liệu
+      if (this.validate()) {
+        if (!this.modeUpdate) {
+          this.handleAdd();
+        } else this.handelUpdate();
+      }
+    },
+
+    // Kiểm tra dữ liệu
+    // CreatedBy : PQHieu(13/06/2021)
+    validate() {
+      if (this.employee.employeeCode.length == 0) {
+        this.notifyMessage = "Mã nhân viên không được để trống";
+        this.dialogNotifyError = true;
+        return false;
+      }
+      if (this.employee.fullName.length == 0) {
+        this.notifyMessage = "Tên không được để trống";
+        this.dialogNotifyError = true;
+        return false;
+      }
+      if (this.employee.deparmentId.length == 0) {
+        this.notifyMessage = "Đơn vị không được để trống";
+        this.dialogNotifyError = true;
+        return false;
+      }
+      return true;
     },
 
     // thêm nhân viên
@@ -319,7 +361,12 @@ export default {
         this.$emit("onNotify", "Nhân viên đã được cập nhật");
         this.$emit("handleReload"); // load laị dữ liệu
       } catch (error) {
-        console.log(error);
+        if (error.response.status == "400") {
+          if (error.response.data.data.detail.fieldNotValid == "EmployeeCode") {
+            this.notifyMessage = error.response.data.userMsg;
+            this.dialogNotifyDanger = true; // hiển thị dialog cảnh báo
+          }
+        }
       }
     },
 
