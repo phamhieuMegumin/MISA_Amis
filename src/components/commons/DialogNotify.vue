@@ -66,7 +66,7 @@ export default {
   max-height: 400px;
   padding-left: 16px;
   position: relative;
-  top: 3px;
+  top: 10px;
 }
 .line {
   height: 1px;

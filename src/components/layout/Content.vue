@@ -10,16 +10,18 @@
               <Button content="Thêm mới nhân viên" />
             </div>
           </template>
-          <Dialog
-            :employeeDetail="employeeDetail"
-            @handleCloseDialog="closeDialog"
-            @handleShowDialog="showDialog"
-            @handleReload="getListEmployee"
-            @resetEmployeeDetail="resetEmployeeDetail"
-            :modeUpdate="modeUpdate"
-            :dialogAddOrUpdate="dialogAddOrUpdate"
-            :listDepartment="listDepartment"
-          />
+          <v-card height="calc(100vh - 34px)">
+            <Dialog
+              :employeeDetail="employeeDetail"
+              @handleCloseDialog="closeDialog"
+              @handleShowDialog="showDialog"
+              @handleReload="getListEmployee"
+              @resetEmployeeDetail="resetEmployeeDetail"
+              :modeUpdate="modeUpdate"
+              :dialogAddOrUpdate="dialogAddOrUpdate"
+              :listDepartment="listDepartment"
+            />
+          </v-card>
         </v-dialog>
       </div>
 
@@ -433,6 +435,7 @@ export default {
 .paginations {
   display: flex;
   align-items: center;
+  min-width: 350px;
 }
 .dropdown-pagiantion {
   position: relative;
