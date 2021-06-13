@@ -12,6 +12,7 @@
     "query-string": "^7.0.0",
     "uuid": "^8.3.2",
     "vue": "^2.6.11",
+    "vue-debounce": "^2.6.0",
     "vuetify": "^2.4.0"
   },
   "devDependencies": {

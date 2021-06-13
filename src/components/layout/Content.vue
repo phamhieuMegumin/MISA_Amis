@@ -31,6 +31,7 @@
             :placeholder="'Tìm theo mã, tên nhân viên'"
             :searchField="true"
             v-model="filterValue"
+            v-debounce:300ms="getListEmployee"
           />
         </div>
         <div class="refresh-btn" @click="getListEmployee">
@@ -122,13 +123,13 @@
               </button>
               <v-pagination
                 v-model="pageInt"
-                :length="10"
-                :total-visible="6"
+                :length="totalPage"
+                :total-visible="8"
                 color="#fff"
               ></v-pagination>
               <button
                 class="pagination-next-btn"
-                :class="[pageInt < 10 ? 'active' : null]"
+                :class="[pageInt < totalPage ? 'active' : null]"
                 @click="handleNext"
               >
                 Sau
@@ -175,11 +176,6 @@ export default {
     this.getListDepartment();
   },
   watch: {
-    // tiến hành filter khi input tìm kiếm đổi
-    // CreatedBy: PQHieu(13/6/2021)
-    filterValue() {
-      this.getListEmployee();
-    },
     pageInt() {
       this.getListEmployee();
     },
