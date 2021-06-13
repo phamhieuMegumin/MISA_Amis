@@ -106,7 +106,7 @@
         </table>
         <div class="pagination-container">
           <div class="total-item">
-            Tổng số : <span class="total-value"></span> bản ghi
+            Tổng số : <span class="total-value">{{ totalItem }}</span> bản ghi
           </div>
           <div class="pagination-wrapper">
             <div class="dropdown-pagiantion">
@@ -115,35 +115,24 @@
             <div class="paginations">
               <button
                 class="pagination-prev-btn"
-                :class="[page > 1 ? 'active' : null]"
+                :class="[pageInt > 1 ? 'active' : null]"
                 @click="handlePrev"
               >
                 Trước
               </button>
               <v-pagination
-                v-model="page"
+                v-model="pageInt"
                 :length="10"
                 :total-visible="6"
                 color="#fff"
               ></v-pagination>
               <button
                 class="pagination-next-btn"
-                :class="[page < 10 ? 'active' : null]"
+                :class="[pageInt < 10 ? 'active' : null]"
                 @click="handleNext"
               >
                 Sau
               </button>
-              <!-- <div>
-                Trước
-              </div>
-              <div class="list-btn-pagination">
-                <div>
-                  1
-                </div>
-              </div>
-              <div>
-                Sau
-              </div> -->
             </div>
           </div>
         </div>
@@ -163,6 +152,7 @@ import Loading from "../commons/Loading.vue";
 import axios from "axios";
 import "../../css/table.css";
 import Employee from "../Employee/Employee.vue";
+import queryString from "query-string";
 export default {
   components: { CheckboxField, Button, InputField, Dialog, Loading, Employee },
   data() {
@@ -175,15 +165,38 @@ export default {
       listDepartment: [], // danh sách phòng ban
       employeeDetail: null, // thông tin nhân viên dùng để sửa
       modeUpdate: false, // thay đổi thêm sang update mode
-      page: 1, // trang hiện tại
+      pageInt: 1, // trang hiện tại
+      pageSize: 20, // số bản ghi trên page
+      totalItem: null, // số lượng bản ghi được trả về
     };
   },
   mounted() {
     this.getListEmployee();
     this.getListDepartment();
   },
-  computed: {},
-
+  watch: {
+    // tiến hành filter khi input tìm kiếm đổi
+    // CreatedBy: PQHieu(13/6/2021)
+    filterValue() {
+      this.getListEmployee();
+    },
+    pageInt() {
+      this.getListEmployee();
+    },
+  },
+  computed: {
+    dataFilter() {
+      const data = {
+        pageInt: this.pageInt,
+        pageSize: this.pageSize,
+        filterString: this.filterValue,
+      };
+      return queryString.stringify(data);
+    },
+    totalPage() {
+      return Math.ceil(this.totalItem / this.pageSize);
+    },
+  },
   methods: {
     // bắt sự kiện đóng dialog của dialog con
     // CreateBy : PQHieu(11/06/2021)
@@ -214,16 +227,16 @@ export default {
     // Chuyển đến page đằng trước
     // CreatedBy : PQHieu(12/6/2021)
     handlePrev() {
-      if (this.page > 1) {
-        this.page--;
+      if (this.pageInt > 1) {
+        this.pageInt--;
       }
     },
 
     // Chuyển đến page phía sau
     // CreatedBy : PQHieu(12/6/2021)
     handleNext() {
-      if (this.page < 10) {
-        this.page++;
+      if (this.pageInt < this.totalPage) {
+        this.pageInt++;
       }
     },
 
@@ -233,9 +246,10 @@ export default {
       try {
         this.showLoading = true; // hiện loading
         const data = await axios.get(
-          "https://localhost:44376/api/v1/Employees"
+          `https://localhost:44376/api/v1/Employees/Filter?${this.dataFilter}`
         );
-        this.listEmployee = data.data;
+        this.listEmployee = data.data.data;
+        this.totalItem = data.data.total;
         this.showLoading = false; // ẩn loading
       } catch (error) {
         this.showLoading = false; // ẩn loading khi có lỗi
