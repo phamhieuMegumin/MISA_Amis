@@ -54,7 +54,7 @@
   overflow: hidden;
 }
 /* dialog css*/
-.v-dialog:not(.v-dialog--fullscreen) {
+.dialog-add-update .v-dialog:not(.v-dialog--fullscreen) {
   max-height: calc(100% - 34px) !important;
   height: calc(100% - 34px) !important;
 }

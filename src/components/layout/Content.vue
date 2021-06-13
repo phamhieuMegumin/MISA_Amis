@@ -3,23 +3,26 @@
     <div class="content-title">
       <h3 class="title-name">Nhân viên</h3>
       <!-- Dialog add  -->
-      <v-dialog v-model="dialogAddOrUpdate" width="900px">
-        <template v-slot:activator="{ on, attrs }">
-          <div class="btn-add" v-bind="attrs" v-on="on">
-            <Button content="Thêm mới nhân viên" />
-          </div>
-        </template>
-        <Dialog
-          :employeeDetail="employeeDetail"
-          @handleCloseDialog="closeDialog"
-          @handleShowDialog="showDialog"
-          @handleReload="getListEmployee"
-          @resetEmployeeDetail="resetEmployeeDetail"
-          :modeUpdate="modeUpdate"
-          :dialogAddOrUpdate="dialogAddOrUpdate"
-          :listDepartment="listDepartment"
-        />
-      </v-dialog>
+      <div class="dialog-add-update">
+        <v-dialog v-model="dialogAddOrUpdate" width="900px">
+          <template v-slot:activator="{ on, attrs }">
+            <div class="btn-add" v-bind="attrs" v-on="on">
+              <Button content="Thêm mới nhân viên" />
+            </div>
+          </template>
+          <Dialog
+            :employeeDetail="employeeDetail"
+            @handleCloseDialog="closeDialog"
+            @handleShowDialog="showDialog"
+            @handleReload="getListEmployee"
+            @resetEmployeeDetail="resetEmployeeDetail"
+            :modeUpdate="modeUpdate"
+            :dialogAddOrUpdate="dialogAddOrUpdate"
+            :listDepartment="listDepartment"
+          />
+        </v-dialog>
+      </div>
+
       <!-- End of dialog add -->
     </div>
     <!-- main content -->
@@ -185,7 +188,7 @@ export default {
       pageInt: 1, // trang hiện tại
       pageSize: 20, // số bản ghi trên page
       totalItem: 0, // số lượng bản ghi được trả về
-
+      dialogNotify: true,
       // Giá trị option truyền vào customSelect
       options: [
         {

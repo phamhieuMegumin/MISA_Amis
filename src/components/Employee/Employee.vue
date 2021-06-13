@@ -30,6 +30,15 @@
             dense
             solo
           ></v-select>
+          <!-- Dialog confirm -->
+          <v-dialog v-model="dialogConfirm" width="444px">
+            <DialogNotify
+              :employeeCode="employee.employeeCode"
+              @closeDialog="handleCloseDialog"
+              @onDelete="deleteEmployee(employee.employeeId)"
+            />
+          </v-dialog>
+          <!-- End of dialog test -->
           <!-- End of dropdown -->
         </div>
       </div>
@@ -41,11 +50,13 @@
 
 <script>
 import CheckboxField from "../commons/CheckboxField.vue";
+import DialogNotify from "../commons/DialogNotify.vue";
 import axios from "axios";
 export default {
   props: ["employee", "listDeparment"],
   components: {
     CheckboxField,
+    DialogNotify,
   },
   data() {
     return {
@@ -65,6 +76,7 @@ export default {
         },
       ],
       selectedValue: null, // lựa chọn các chức năng
+      dialogConfirm: false,
     };
   },
   computed: {
@@ -96,7 +108,8 @@ export default {
   watch: {
     selectedValue() {
       if (this.selectedValue == 2) {
-        this.deleteEmployee(this.employee.employeeId);
+        this.dialogConfirm = true;
+        // this.deleteEmployee(this.employee.employeeId);
       }
       setTimeout(() => {
         this.selectedValue = 0;
@@ -121,10 +134,17 @@ export default {
           data: employeeId,
         });
         this.showLoading = false; // ẩn loading
+        this.dialogConfirm = false; // đóng dialog confirm
         this.$emit("handleReload"); // reload sau khi xóa
       } catch (error) {
         console.log(error);
       }
+    },
+
+    // đóng dialog confirm
+    // CreatedBy : PQHieu(13/06/2021)
+    handleCloseDialog() {
+      this.dialogConfirm = false;
     },
   },
 };
