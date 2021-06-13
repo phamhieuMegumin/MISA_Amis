@@ -186,6 +186,7 @@ export default {
       pageSize: 20, // số bản ghi trên page
       totalItem: 0, // số lượng bản ghi được trả về
 
+      // Giá trị option truyền vào customSelect
       options: [
         {
           value: 10,
@@ -211,11 +212,16 @@ export default {
     };
   },
   mounted() {
-    this.getListEmployee();
-    this.getListDepartment();
+    this.getListEmployee(); // lấy danh sách nhân viên
+    this.getListDepartment(); // lấy danh sách phòng ban
   },
   watch: {
+    // bắt thay đổi của pageInt
     pageInt() {
+      this.getListEmployee();
+    },
+    // bắt thay đổi của pageSize
+    pageSize() {
       this.getListEmployee();
     },
   },
@@ -275,6 +281,8 @@ export default {
       }
     },
 
+    // lấy giá trị pageSize mới
+    // CreatedBy : PQHieu(13/6/2021)
     handleChangeValue(value) {
       this.pageSize = value;
     },
@@ -421,8 +429,10 @@ export default {
   align-items: center;
 }
 .dropdown-pagiantion {
+  position: relative;
   margin: 0 16px;
-  width: 200px;
+  left: 42px;
+  width: 198px;
 }
 /* Pagionation */
 .pagination-prev-btn,
