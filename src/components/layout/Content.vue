@@ -101,6 +101,7 @@
               :employee="employee"
               @handleGetEmployeeID="getEmployeeID"
               @handleReload="getListEmployee"
+              :listDeparment="listDepartment"
             />
             <!-- End of employee detail -->
           </tbody>
@@ -111,7 +112,6 @@
           </div>
           <div class="pagination-wrapper">
             <div class="dropdown-pagiantion">
-              <!-- <DropdownField :listOption="listOption" nameField="ItemPerPage" /> -->
               <CustomSelect
                 tabindex="0"
                 label_key="name"
@@ -296,6 +296,9 @@ export default {
         );
         this.listEmployee = data.data.data;
         this.totalItem = data.data.total;
+        if (data.status == "204") {
+          this.totalItem = 0;
+        }
         this.showLoading = false; // ẩn loading
       } catch (error) {
         this.showLoading = false; // ẩn loading khi có lỗi

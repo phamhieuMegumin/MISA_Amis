@@ -1,6 +1,8 @@
 <template>
   <div
     class="combobox-container"
+    :class="isShow ? 'active' : null"
+    @focusout="closeOptions"
     @keyup.up="handleKeyUp"
     @keyup.down="handleKeyDown"
     @keyup.enter="handleEnter"
@@ -107,6 +109,9 @@ export default {
 .combobox-container {
   width: 198px;
   position: relative;
+}
+.combobox-container.active .combobox-field {
+  border-color: #2ca01c;
 }
 .combobox-field {
   width: 198px;

@@ -199,7 +199,6 @@ export default {
       }
     },
     employeeDetail() {
-      console.log(this.employeeDetail);
       // format giá trị ngày tháng
       if (this.employeeDetail) {
         this.employee = { ...this.employeeDetail };
@@ -248,7 +247,6 @@ export default {
     // thêm hoặc sửa nhân viên
     // CreatedBy : PQHieu(12/06/2021)
     async handleAddOrUpdate() {
-      console.log(this.modeUpdate);
       if (!this.modeUpdate) {
         this.handleAdd();
       } else this.handelUpdate();

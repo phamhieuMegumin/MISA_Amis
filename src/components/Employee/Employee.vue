@@ -7,10 +7,10 @@
     <td>{{ employee.employeeCode }}</td>
     <td>{{ employee.fullName }}</td>
     <td>{{ employee.genderName }}</td>
-    <td>{{ formatDateOfBirth(employee) }}</td>
+    <td>{{ formatDateOfBirth }}</td>
     <td>{{ employee.identityNumber }}</td>
     <td>{{ employee.positionName }}</td>
-    <td>asdfsdf</td>
+    <td>{{ formatDeparmentName }}</td>
     <td>{{ employee.bankAccount }}</td>
     <td>{{ employee.bankName }}</td>
     <td class="no--right-border">{{ employee.bankBranch }}</td>
@@ -43,7 +43,7 @@
 import CheckboxField from "../commons/CheckboxField.vue";
 import axios from "axios";
 export default {
-  props: ["employee"],
+  props: ["employee", "listDeparment"],
   components: {
     CheckboxField,
   },
@@ -66,6 +66,32 @@ export default {
       ],
       selectedValue: null, // lựa chọn các chức năng
     };
+  },
+  computed: {
+    // format dữ liệu ngày tháng
+    // CreateBy : PQHieu(11/06/2021)
+    formatDateOfBirth() {
+      if (this.employee.dateOfBirth) {
+        const newDate = new Date(this.employee.dateOfBirth);
+        let strDay = newDate.getDate();
+        let strMonth = newDate.getMonth() + 1;
+        let strYear = newDate.getFullYear();
+        if (strDay < 10) strDay = `0${strDay}`;
+        if (strMonth < 10) strMonth = `0${strMonth}`;
+        return `${strDay}/${strMonth}/${strYear}`;
+      }
+      return null;
+    },
+
+    // format dữ liệu tên phòng ban theo id nhận được
+    // CreateBy : PQHieu(11/06/2021)
+    formatDeparmentName() {
+      for (let i = 0; i < this.listDeparment.length; i++) {
+        if (this.listDeparment[i].deparmentId === this.employee.deparmentId)
+          return this.listDeparment[i].deparmentName;
+      }
+      return null;
+    },
   },
   watch: {
     selectedValue() {
@@ -99,21 +125,6 @@ export default {
       } catch (error) {
         console.log(error);
       }
-    },
-
-    // format dữ liệu ngày tháng
-    // CreateBy : PQHieu(11/06/2021)
-    formatDateOfBirth(employee) {
-      if (employee.dateOfBirth) {
-        const newDate = new Date(employee.dateOfBirth);
-        let strDay = newDate.getDate();
-        let strMonth = newDate.getMonth() + 1;
-        let strYear = newDate.getFullYear();
-        if (strDay < 10) strDay = `0${strDay}`;
-        if (strMonth < 10) strMonth = `0${strMonth}`;
-        return `${strDay}/${strMonth}/${strYear}`;
-      }
-      return null;
     },
   },
 };
