@@ -131,7 +131,7 @@
               </button>
               <v-pagination
                 v-model="pageInt"
-                :length="8"
+                :length="totalPage"
                 color="#fff"
               ></v-pagination>
               <button
