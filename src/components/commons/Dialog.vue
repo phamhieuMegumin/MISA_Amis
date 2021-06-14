@@ -68,13 +68,13 @@
                 :required="true"
                 v-model="employee.employeeCode"
                 :errorNotify="errorNotifyCode"
+                :autofocus="true"
               />
             </div>
             <div class="input-name">
               <InputField
                 :label="'Tên'"
                 :required="true"
-                :autofocus="true"
                 v-model="employee.fullName"
                 :errorNotify="errorNotifyFullName"
               />
@@ -187,7 +187,7 @@
     <!--  -->
     <div class="modal-footer-container">
       <div class="modal-footer">
-        <div class="btn-cancel" @click="onClose">
+        <div class="btn-cancel" @click="$emit('handleCloseDialog')">
           <Button :content="'Hủy'" :btnWhite="true" />
         </div>
         <div class="btn-group">
@@ -331,7 +331,7 @@ export default {
       } else if (this.employee.fullName.length == 0 && this.dialogAddOrUpdate)
         this.errorNotifyFullName.status = true;
     },
-    "employee.departmentId"() {
+    "employee.deparmentId"() {
       if (this.employee.deparmentId.length > 0) {
         this.errorNotifyDepartment.status = false;
         this.errorNotifyDepartment.errorMessage = "";
@@ -506,7 +506,7 @@ export default {
         if (!this.handleCompareObject(newOb, this.employee)) {
           this.dialogNotifyConfirm = true;
         } else this.$emit("handleCloseDialog");
-      } else this.$emit("handleCloseDialog");
+      } else this.dialogNotifyConfirm = true;
     },
 
     // so sánh 2 object
