@@ -36,10 +36,7 @@
       </div>
       <div class="modal-close">
         <div class="modal-icon help-icon"></div>
-        <div
-          class="modal-icon close-icon"
-          @click="$emit('handleCloseDialog')"
-        ></div>
+        <div class="modal-icon close-icon" @click="onClose"></div>
       </div>
     </div>
     <!--  -->
@@ -177,7 +174,7 @@
     <!--  -->
     <div class="modal-footer-container">
       <div class="modal-footer">
-        <div class="btn-cancel" @click="$emit('handleCloseDialog')">
+        <div class="btn-cancel" @click="onClose">
           <Button :content="'Hủy'" :btnWhite="true" />
         </div>
         <div class="btn-group">
@@ -217,6 +214,7 @@ export default {
   created() {
     if (this.employeeDetail) {
       this.employee = { ...this.employeeDetail };
+      this.compareObject = this.employeeDetail;
       // format giá trị ngày tháng
       this.employee.dateOfBirth = this.formatDateEmployee(
         this.employee.dateOfBirth
@@ -249,6 +247,7 @@ export default {
         bankName: "",
         bankBranch: "",
       },
+      compareObject: null, // object lưu dữ liệu nhân viên để so sánh thay đổi
       notifyMessage: "", // Nội dùng dialog
       dialogNotifyError: false, // hiển thị dialog thông báo lỗi
       dialogNotifyDanger: false, // hiển thị dialog cảnh báo
@@ -268,8 +267,10 @@ export default {
   },
 
   watch: {
-    // reset lại dialog
+    // theo dõi đóng mở dialog và thực hiện các tác vụ
     dialogAddOrUpdate() {
+      // đóng dialog
+      // tác vụ : reset dialog, reset các lỗi validate của field, kiểm tra sự thay đổi của field
       if (!this.dialogAddOrUpdate) {
         this.employee = { ...DefaultEmployee }; // reset dialog
         const resetData = {
@@ -280,7 +281,10 @@ export default {
         this.errorNotifyFullName = { ...resetData }; // reset hiển thị validate fullName
         this.errorNotifyDepartment = { ...resetData }; // reset hiển thị validate department
         this.$emit("resetEmployeeDetail");
-      } else {
+      }
+      // Mở dialog
+      // tác vụ : lấy mã nhân viên mới
+      else {
         if (!this.employeeDetail) this.getNewEmployeeCode(); // lấy mã nhân viên khi dialog được show
       }
     },
@@ -295,16 +299,23 @@ export default {
           this.employee.identityDate
         );
       }
+      //
     },
     "employee.employeeCode"() {
       if (this.employee.employeeCode.length > 0) {
         this.errorNotifyCode.status = false;
-      } else this.errorNotifyCode.status = true;
+      } else if (
+        this.employee.employeeCode.length == 0 &&
+        this.dialogAddOrUpdate
+      ) {
+        this.errorNotifyCode.status = true;
+      }
     },
     "employee.fullName"() {
       if (this.employee.fullName.length > 0) {
         this.errorNotifyFullName.status = false;
-      } else this.errorNotifyFullName.status = true;
+      } else if (this.employee.fullName.length == 0 && this.dialogAddOrUpdate)
+        this.errorNotifyFullName.status = true;
     },
     "employee.departmentId"() {
       if (this.employee.deparmentId.length > 0) {
@@ -440,18 +451,45 @@ export default {
       if (date) {
         return this.formatDate(date);
       }
+      return null;
     },
 
     // chuyển đổi giá trị ngày tháng về yyyy-mm-dd
     // CreatedBy : PQHieu(12/06/2021)
     formatDate(date) {
-      const newDate = new Date(date);
-      let strDay = newDate.getDate();
-      let strMonth = newDate.getMonth() + 1;
-      let strYear = newDate.getFullYear();
-      if (strDay < 10) strDay = `0${strDay}`;
-      if (strMonth < 10) strMonth = `0${strMonth}`;
-      return `${strYear}-${strMonth}-${strDay}`;
+      if (date) {
+        const newDate = new Date(date);
+        let strDay = newDate.getDate();
+        let strMonth = newDate.getMonth() + 1;
+        let strYear = newDate.getFullYear();
+        if (strDay < 10) strDay = `0${strDay}`;
+        if (strMonth < 10) strMonth = `0${strMonth}`;
+        return `${strYear}-${strMonth}-${strDay}`;
+      }
+      return null;
+    },
+
+    onClose() {
+      if (this.modeUpdate) {
+        var newOb = this.employeeDetail;
+        newOb.dateOfBirth = this.formatDate(newOb.dateOfBirth);
+        newOb.identityDate = this.formatDate(newOb.identityDate);
+      } else this.$emit("handleCloseDialog");
+    },
+    // so sánh 2 object
+    // CreatedBy : PQhieu(14/06/2021)
+    handleCompareObject(object1, object2) {
+      const keys1 = Object.keys(object1);
+      const keys2 = Object.keys(object2);
+      if (keys1.length !== keys2.length) {
+        return false;
+      }
+      for (let key of keys1) {
+        if (object1[key] !== object2[key]) {
+          return false;
+        }
+      }
+      return true;
     },
   },
 };
