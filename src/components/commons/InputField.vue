@@ -12,7 +12,7 @@
         :placeholder="placeholder"
         :value="value ? value : inputValue"
         @input="getValue"
-        :class="[required && validate ? 'error' : '']"
+        :class="[required && errorNotify ? 'errorInput' : '']"
       />
       <div v-if="searchField" class="search-icon"></div>
       <div v-if="required && showMessage && validate" class="validateMessage">
@@ -24,6 +24,11 @@
 
 <script>
 export default {
+  watch: {
+    errorNotify() {
+      console.log(this.errorNotify);
+    },
+  },
   props: [
     "placeholder",
     "searchField",
@@ -32,6 +37,7 @@ export default {
     "value",
     "required",
     "autofocus",
+    "errorNotify",
   ],
 
   data() {
@@ -108,7 +114,7 @@ export default {
 .required {
   color: red;
 }
-.error {
+.errorInput {
   border-color: red !important;
 }
 </style>

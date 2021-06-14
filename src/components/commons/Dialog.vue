@@ -57,6 +57,7 @@
                 :label="'Mã'"
                 :required="true"
                 v-model="employee.employeeCode"
+                :errorNotify="errorNotifyCode"
               />
             </div>
             <div class="input-name">
@@ -65,6 +66,7 @@
                 :required="true"
                 :autofocus="true"
                 v-model="employee.fullName"
+                :errorNotify="errorNotifyFullName"
               />
             </div>
           </div>
@@ -222,29 +224,6 @@ export default {
       );
     } else this.getNewEmployeeCode();
   },
-  watch: {
-    // reset lại dialog
-    dialogAddOrUpdate() {
-      if (!this.dialogAddOrUpdate) {
-        this.employee = { ...DefaultEmployee };
-        this.$emit("resetEmployeeDetail");
-      } else {
-        if (!this.employeeDetail) this.getNewEmployeeCode(); // lấy mã nhân viên khi dialog được show
-      }
-    },
-    employeeDetail() {
-      // format giá trị ngày tháng
-      if (this.employeeDetail) {
-        this.employee = { ...this.employeeDetail };
-        this.employee.dateOfBirth = this.formatDateEmployee(
-          this.employee.dateOfBirth
-        );
-        this.employee.identityDate = this.formatDateEmployee(
-          this.employee.identityDate
-        );
-      }
-    },
-  },
 
   data() {
     return {
@@ -271,8 +250,47 @@ export default {
       notifyMessage: "", // Nội dùng dialog
       dialogNotifyError: false, // hiển thị dialog thông báo lỗi
       dialogNotifyDanger: false, // hiển thị dialog cảnh báo
+      errorNotifyCode: false, // bắt validate Code field
+      errorNotifyFullName: false, // Bắt validate fullName field
     };
   },
+
+  watch: {
+    // reset lại dialog
+    dialogAddOrUpdate() {
+      if (!this.dialogAddOrUpdate) {
+        this.employee = { ...DefaultEmployee }; // reset dialog
+        this.errorNotifyCode = false; // reset hiển thị validate code
+        this.errorNotifyFullName = false; // reset hiển thị validate fullName
+        this.$emit("resetEmployeeDetail");
+      } else {
+        if (!this.employeeDetail) this.getNewEmployeeCode(); // lấy mã nhân viên khi dialog được show
+      }
+    },
+    employeeDetail() {
+      // format giá trị ngày tháng
+      if (this.employeeDetail) {
+        this.employee = { ...this.employeeDetail };
+        this.employee.dateOfBirth = this.formatDateEmployee(
+          this.employee.dateOfBirth
+        );
+        this.employee.identityDate = this.formatDateEmployee(
+          this.employee.identityDate
+        );
+      }
+    },
+    "employee.employeeCode"() {
+      if (this.employee.employeeCode.length > 0) {
+        this.errorNotifyCode = false;
+      } else this.errorNotifyCode = true;
+    },
+    "employee.fullName"() {
+      if (this.employee.fullName.length > 0) {
+        this.errorNotifyFullName = false;
+      } else this.errorNotifyFullName = true;
+    },
+  },
+
   methods: {
     // Thay đổi chế độ cất và thêm
     // CreatedBy : PQHieu(12/06/2021)
@@ -307,22 +325,27 @@ export default {
     // Kiểm tra dữ liệu
     // CreatedBy : PQHieu(13/06/2021)
     validate() {
-      if (this.employee.employeeCode.length == 0) {
-        this.notifyMessage = "Mã nhân viên không được để trống";
-        this.dialogNotifyError = true;
-        return false;
-      }
-      if (this.employee.fullName.length == 0) {
-        this.notifyMessage = "Tên không được để trống";
-        this.dialogNotifyError = true;
-        return false;
-      }
+      var isValid = true;
       if (this.employee.deparmentId.length == 0) {
         this.notifyMessage = "Đơn vị không được để trống";
+        this.errorCode = 3;
         this.dialogNotifyError = true;
-        return false;
+        isValid = false;
       }
-      return true;
+
+      if (this.employee.fullName.length == 0) {
+        this.notifyMessage = "Tên không được để trống";
+        this.errorNotifyFullName = true;
+        this.dialogNotifyError = true;
+        isValid = false;
+      }
+      if (this.employee.employeeCode.length == 0) {
+        this.notifyMessage = "Mã nhân viên không được để trống";
+        this.errorNotifyCode = true;
+        this.dialogNotifyError = true;
+        isValid = false;
+      }
+      return isValid;
     },
 
     // thêm nhân viên
