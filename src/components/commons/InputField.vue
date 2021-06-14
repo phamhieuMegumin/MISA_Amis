@@ -12,11 +12,11 @@
         :placeholder="placeholder"
         :value="value ? value : inputValue"
         @input="getValue"
-        :class="[required && errorNotify ? 'errorInput' : '']"
+        :class="[required && errorNotify.status ? 'errorInput' : '']"
       />
       <div v-if="searchField" class="search-icon"></div>
-      <div v-if="required && showMessage && validate" class="validateMessage">
-        <p>{{ errorMessage }}</p>
+      <div v-if="required && errorNotify.status" class="validateMessage">
+        <p>{{ errorNotify.errorMessage }}</p>
       </div>
     </div>
   </div>
@@ -107,9 +107,14 @@ export default {
   transform: translateX(-50%);
   user-select: none;
   padding: 3px 3px;
+  display: none;
 }
 .validateMessage p {
   font-size: 12px;
+  margin-bottom: 0;
+}
+.input-field:hover .validateMessage {
+  display: block;
 }
 .required {
   color: red;

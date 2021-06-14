@@ -79,6 +79,8 @@
               item-text="deparmentName"
               item-value="deparmentId"
               no-data-text="Không có dữ liệu"
+              :error="errorNotifyDepartment.status"
+              :error-messages="errorNotifyDepartment.errorMessage"
             ></v-autocomplete>
           </div>
           <div class="p-12">
@@ -250,8 +252,18 @@ export default {
       notifyMessage: "", // Nội dùng dialog
       dialogNotifyError: false, // hiển thị dialog thông báo lỗi
       dialogNotifyDanger: false, // hiển thị dialog cảnh báo
-      errorNotifyCode: false, // bắt validate Code field
-      errorNotifyFullName: false, // Bắt validate fullName field
+      errorNotifyCode: {
+        status: false, // bắt validate Code field
+        errorMessage: "",
+      },
+      errorNotifyFullName: {
+        status: false, // bắt validate fullName field
+        errorMessage: "",
+      },
+      errorNotifyDepartment: {
+        status: false, // bắt validate đơn vị
+        errorMessage: "",
+      },
     };
   },
 
@@ -260,8 +272,13 @@ export default {
     dialogAddOrUpdate() {
       if (!this.dialogAddOrUpdate) {
         this.employee = { ...DefaultEmployee }; // reset dialog
-        this.errorNotifyCode = false; // reset hiển thị validate code
-        this.errorNotifyFullName = false; // reset hiển thị validate fullName
+        const resetData = {
+          status: false,
+          errorMessage: "",
+        };
+        this.errorNotifyCode = { ...resetData }; // reset hiển thị validate Code
+        this.errorNotifyFullName = { ...resetData }; // reset hiển thị validate fullName
+        this.errorNotifyDepartment = { ...resetData }; // reset hiển thị validate department
         this.$emit("resetEmployeeDetail");
       } else {
         if (!this.employeeDetail) this.getNewEmployeeCode(); // lấy mã nhân viên khi dialog được show
@@ -281,13 +298,19 @@ export default {
     },
     "employee.employeeCode"() {
       if (this.employee.employeeCode.length > 0) {
-        this.errorNotifyCode = false;
-      } else this.errorNotifyCode = true;
+        this.errorNotifyCode.status = false;
+      } else this.errorNotifyCode.status = true;
     },
     "employee.fullName"() {
       if (this.employee.fullName.length > 0) {
-        this.errorNotifyFullName = false;
-      } else this.errorNotifyFullName = true;
+        this.errorNotifyFullName.status = false;
+      } else this.errorNotifyFullName.status = true;
+    },
+    "employee.departmentId"() {
+      if (this.employee.deparmentId.length > 0) {
+        this.errorNotifyDepartment.status = false;
+        this.errorNotifyDepartment.errorMessage = "";
+      }
     },
   },
 
@@ -328,21 +351,24 @@ export default {
       var isValid = true;
       if (this.employee.deparmentId.length == 0) {
         this.notifyMessage = "Đơn vị không được để trống";
-        this.errorCode = 3;
+        this.errorNotifyDepartment.status = true;
+        this.errorNotifyDepartment.errorMessage = "Đơn vị không được để trống";
         this.dialogNotifyError = true;
         isValid = false;
       }
 
       if (this.employee.fullName.length == 0) {
         this.notifyMessage = "Tên không được để trống";
-        this.errorNotifyFullName = true;
-        this.dialogNotifyError = true;
+        this.errorNotifyFullName.status = true;
+        this.errorNotifyFullName.errorMessage = "Tên không được để trống";
+        this.dialogNotifyError = true; // hiển thị dialog báo lỗi
         isValid = false;
       }
       if (this.employee.employeeCode.length == 0) {
         this.notifyMessage = "Mã nhân viên không được để trống";
-        this.errorNotifyCode = true;
-        this.dialogNotifyError = true;
+        this.errorNotifyCode.status = true;
+        this.errorNotifyCode.errorMessage = "Mã không được để trống";
+        this.dialogNotifyError = true; // hiển thị dialog báo lỗi
         isValid = false;
       }
       return isValid;
