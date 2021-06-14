@@ -22,6 +22,19 @@
     </v-dialog>
     <!--  -->
     <!-- End of dialog danger -->
+    <!-- Dialog danger -->
+    <!--  -->
+    <v-dialog v-model="dialogNotifyConfirm" width="444px">
+      <DialogNotify
+        @closeDialog="handleCloseConfirmDialog"
+        type="notify-note"
+        :notifyMessage="notifyMessage"
+        @closeAllDialog="handleCloseAllDialog"
+        @onAddOrUpdate="handleAddOrUpdate"
+      />
+    </v-dialog>
+    <!--  -->
+    <!-- End of dialog danger -->
     <div class="modal-header-container">
       <div class="modal-header">
         <h3 class="modal-title">Thông tin nhân viên</h3>
@@ -251,6 +264,7 @@ export default {
       notifyMessage: "", // Nội dùng dialog
       dialogNotifyError: false, // hiển thị dialog thông báo lỗi
       dialogNotifyDanger: false, // hiển thị dialog cảnh báo
+      dialogNotifyConfirm: false, // hiển thị dialog thông báo
       errorNotifyCode: {
         status: false, // bắt validate Code field
         errorMessage: "",
@@ -343,6 +357,19 @@ export default {
     // CreatedBy : PQHieu(12/6/2021)
     handleCloseErrorDialog() {
       this.dialogNotifyError = false;
+    },
+
+    // đóng dialog báo lỗi
+    // CreatedBy : PQHieu(12/6/2021)
+    handleCloseConfirmDialog() {
+      this.dialogNotifyConfirm = false;
+    },
+
+    // đóng tất cả dialog hiện tại
+    // CreatedBy: PQhieu(12/6/2021)
+    handleCloseAllDialog() {
+      this.handleCloseConfirmDialog();
+      this.$emit("handleCloseDialog");
     },
 
     // thêm hoặc sửa nhân viên
@@ -469,13 +496,19 @@ export default {
       return null;
     },
 
+    // bắt sự kiện đóng dialog và thự hiện so sánh dữ liệu để đưa ra thông báo
+    // CreatedBy : PQhieu(14/06/2021)
     onClose() {
       if (this.modeUpdate) {
         var newOb = this.employeeDetail;
         newOb.dateOfBirth = this.formatDate(newOb.dateOfBirth);
         newOb.identityDate = this.formatDate(newOb.identityDate);
+        if (!this.handleCompareObject(newOb, this.employee)) {
+          this.dialogNotifyConfirm = true;
+        } else this.$emit("handleCloseDialog");
       } else this.$emit("handleCloseDialog");
     },
+
     // so sánh 2 object
     // CreatedBy : PQhieu(14/06/2021)
     handleCompareObject(object1, object2) {

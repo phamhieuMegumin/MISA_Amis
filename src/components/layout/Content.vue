@@ -4,7 +4,7 @@
       <h3 class="title-name">Nhân viên</h3>
       <!-- Dialog add  -->
       <div class="dialog-add-update">
-        <v-dialog v-model="dialogAddOrUpdate" width="900px">
+        <v-dialog v-model="dialogAddOrUpdate" width="900px" :persistent="true">
           <template v-slot:activator="{ on, attrs }">
             <div class="btn-add" v-bind="attrs" v-on="on">
               <Button content="Thêm mới nhân viên" />

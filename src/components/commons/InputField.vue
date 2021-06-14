@@ -24,11 +24,6 @@
 
 <script>
 export default {
-  watch: {
-    errorNotify() {
-      console.log(this.errorNotify);
-    },
-  },
   props: [
     "placeholder",
     "searchField",

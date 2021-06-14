@@ -8,6 +8,7 @@
           type == 'confirm' ? 'logo-danger' : null,
           type == 'notify-error' ? 'logo-error' : null,
           type == 'notify-danger' ? 'logo-danger' : null,
+          type == 'notify-note' ? 'logo-note' : null,
         ]"
       ></div>
       <div class="modal-message">
@@ -25,6 +26,9 @@
         <p v-if="type == 'notify-error'">
           {{ notifyMessage }}
         </p>
+        <p v-if="type == 'notify-note'">
+          Dữ liệu đã bị thay đổi. Bạn có muốn cất không?
+        </p>
       </div>
     </div>
     <div class="line"></div>
@@ -35,6 +39,7 @@
         type == 'notify-success' ? 'notify-center' : null,
         type == 'notify-error' ? 'notify-center' : null,
         type == 'notify-danger' ? 'notify-end' : null,
+        type == 'notify-note' ? 'notify-space' : null,
       ]"
     >
       <div v-if="type == 'confirm'" @click="$emit('closeDialog')">
@@ -45,7 +50,7 @@
       </div>
       <div
         class="notify-btn"
-        v-if="type != 'confirm'"
+        v-if="type != 'confirm' && type != 'notify-note'"
         @click="$emit('closeDialog')"
       >
         <Button
@@ -55,6 +60,18 @@
               : 'Đồng ý'
           "
         />
+      </div>
+      <!-- notify note -->
+      <div v-if="type == 'notify-note'" @click="$emit('closeDialog')">
+        <Button :content="'Hủy'" :btnWhite="true" />
+      </div>
+      <div v-if="type == 'notify-note'" class="group-btn">
+        <div @click="$emit('closeAllDialog')" class="btn-r-10">
+          <Button :content="'Không'" :btnWhite="true" />
+        </div>
+        <div @click="onAdd">
+          <Button :content="'Có'" />
+        </div>
       </div>
     </div>
   </div>
@@ -71,6 +88,12 @@ export default {
       employeeCodeNotify: "111",
     };
   },
+  methods: {
+    onAdd() {
+      this.$emit("onAddOrUpdate");
+      this.$emit("closeDialog");
+    },
+  },
 };
 </script>
 
@@ -82,7 +105,7 @@ export default {
 .modal-content {
   display: flex;
   align-items: center;
-  margin-bottom: 32px;
+  margin-bottom: 20px;
 }
 .logo-message {
   width: 48px;
@@ -102,6 +125,9 @@ export default {
 }
 .logo-danger {
   background-position: -592px -456px;
+}
+.logo-note {
+  background-position: -826px -456px;
 }
 .modal-message {
   overflow: auto;
@@ -127,5 +153,11 @@ export default {
 }
 .modal-bottom.notify-space {
   justify-content: space-between;
+}
+.group-btn {
+  display: flex;
+}
+.btn-r-10 {
+  margin-right: 10px;
 }
 </style>
