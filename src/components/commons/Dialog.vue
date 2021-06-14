@@ -265,6 +265,7 @@ export default {
       dialogNotifyError: false, // hiển thị dialog thông báo lỗi
       dialogNotifyDanger: false, // hiển thị dialog cảnh báo
       dialogNotifyConfirm: false, // hiển thị dialog thông báo
+      saveAndAddMode: false, // chế độ cất và thêm
       errorNotifyCode: {
         status: false, // bắt validate Code field
         errorMessage: "",
@@ -318,18 +319,12 @@ export default {
     "employee.employeeCode"() {
       if (this.employee.employeeCode.length > 0) {
         this.errorNotifyCode.status = false;
-      } else if (
-        this.employee.employeeCode.length == 0 &&
-        this.dialogAddOrUpdate
-      ) {
-        this.errorNotifyCode.status = true;
       }
     },
     "employee.fullName"() {
       if (this.employee.fullName.length > 0) {
         this.errorNotifyFullName.status = false;
-      } else if (this.employee.fullName.length == 0 && this.dialogAddOrUpdate)
-        this.errorNotifyFullName.status = true;
+      }
     },
     "employee.deparmentId"() {
       if (this.employee.deparmentId.length > 0) {
@@ -343,8 +338,25 @@ export default {
     // Thay đổi chế độ cất và thêm
     // CreatedBy : PQHieu(12/06/2021)
     handleSaveAndAdd() {
-      this.handleSaveAndAdd();
-      this.$emit("handleShowDialog"); // Hiển thị dialog sau khi cất
+      // kiểm tra validate dữ liệu
+      this.saveAndAddMode = false; // bật mode cất và thêm
+      if (this.validate()) {
+        if (!this.modeUpdate) {
+          this.handleAdd();
+        } else this.handelUpdate();
+      }
+      // reset data
+      const resetData = {
+        status: false,
+        errorMessage: "",
+      };
+      this.employee = { ...DefaultEmployee }; // resetDialog
+      this.errorNotifyCode = { ...resetData }; // reset hiển thị validate Code
+      debugger;
+      this.errorNotifyFullName = { ...resetData }; // reset hiển thị validate fullName
+      this.errorNotifyDepartment = { ...resetData }; // reset hiển thị validate department
+      this.$emit("resetEmployeeDetail");
+      this.getNewEmployeeCode(); // cập nhật mã nhân viên mới
     },
 
     // đóng dialog cảnh báo
@@ -374,12 +386,13 @@ export default {
 
     // thêm hoặc sửa nhân viên
     // CreatedBy : PQHieu(12/06/2021)
-    async handleAddOrUpdate() {
+    handleAddOrUpdate() {
       // kiểm tra validate dữ liệu
       if (this.validate()) {
         if (!this.modeUpdate) {
           this.handleAdd();
         } else this.handelUpdate();
+        this.$emit("handleCloseDialog"); // Ẩn dialog là resetdialog
       }
     },
 
@@ -422,7 +435,6 @@ export default {
           url: "https://localhost:44376/api/v1/Employees",
           data: this.employee,
         });
-        this.$emit("handleCloseDialog"); // Ẩn dialog là resetdialog
         this.$emit("onNotify", "Nhân viên đã được thêm thành công");
         this.$emit("handleReload"); // load laị dữ liệu
       } catch (error) {
@@ -444,7 +456,6 @@ export default {
           url: `https://localhost:44376/api/v1/Employees/${this.employee.employeeId}`,
           data: this.employee,
         });
-        this.$emit("handleCloseDialog"); // Ẩn dialog là resetdialog
         this.$emit("onNotify", "Nhân viên đã được cập nhật");
         this.$emit("handleReload"); // load laị dữ liệu
       } catch (error) {
