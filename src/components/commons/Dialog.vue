@@ -24,7 +24,7 @@
     <!-- End of dialog danger -->
     <!-- Dialog danger -->
     <!--  -->
-    <v-dialog v-model="dialogNotifyConfirm" width="444px">
+    <v-dialog :persistent="true" v-model="dialogNotifyConfirm" width="444px">
       <DialogNotify
         @closeDialog="handleCloseConfirmDialog"
         type="notify-note"
@@ -295,6 +295,7 @@ export default {
         this.errorNotifyCode = { ...resetData }; // reset hiển thị validate Code
         this.errorNotifyFullName = { ...resetData }; // reset hiển thị validate fullName
         this.errorNotifyDepartment = { ...resetData }; // reset hiển thị validate department
+        this.saveAndAddMode = false;
         this.$emit("resetEmployeeDetail");
       }
       // Mở dialog
@@ -339,7 +340,7 @@ export default {
     // CreatedBy : PQHieu(12/06/2021)
     handleSaveAndAdd() {
       // kiểm tra validate dữ liệu
-      this.saveAndAddMode = false; // bật mode cất và thêm
+      this.saveAndAddMode = true; // bật mode cất và thêm
       if (this.validate()) {
         if (!this.modeUpdate) {
           this.handleAdd();
@@ -350,13 +351,10 @@ export default {
         status: false,
         errorMessage: "",
       };
-      this.employee = { ...DefaultEmployee }; // resetDialog
       this.errorNotifyCode = { ...resetData }; // reset hiển thị validate Code
-      debugger;
       this.errorNotifyFullName = { ...resetData }; // reset hiển thị validate fullName
       this.errorNotifyDepartment = { ...resetData }; // reset hiển thị validate department
       this.$emit("resetEmployeeDetail");
-      this.getNewEmployeeCode(); // cập nhật mã nhân viên mới
     },
 
     // đóng dialog cảnh báo
@@ -382,6 +380,15 @@ export default {
     handleCloseAllDialog() {
       this.handleCloseConfirmDialog();
       this.$emit("handleCloseDialog");
+    },
+
+    // gán giá mã nhân viên mới khi ở chế độ cất và thêm
+    // CreatedBy : PQHieu(15/6/2021)
+    getNewEmployeeCodeInSaveAndAddMode() {
+      // lấy mã nhân viên mới
+      var newCode = this.employee.employeeCode.slice(3);
+      newCode = parseInt(newCode) + 1;
+      return `NV-${newCode}`; // gán mã nhân viên mới
     },
 
     // thêm hoặc sửa nhân viên
@@ -436,6 +443,10 @@ export default {
           data: this.employee,
         });
         this.$emit("onNotify", "Nhân viên đã được thêm thành công");
+        if (this.saveAndAddMode) {
+          var newCode = this.getNewEmployeeCodeInSaveAndAddMode(); // lấy mã nhân viên mới
+          this.employee = { ...DefaultEmployee, employeeCode: newCode }; // resetDialog
+        }
         this.$emit("handleReload"); // load laị dữ liệu
       } catch (error) {
         if (error.response.status == "400") {
@@ -457,6 +468,10 @@ export default {
           data: this.employee,
         });
         this.$emit("onNotify", "Nhân viên đã được cập nhật");
+        if (this.saveAndAddMode) {
+          var newCode = this.getNewEmployeeCodeInSaveAndAddMode(); // lấy mã nhân viên mới
+          this.employee = { ...DefaultEmployee, employeeCode: newCode }; // resetDialog
+        }
         this.$emit("handleReload"); // load laị dữ liệu
       } catch (error) {
         if (error.response.status == "400") {
@@ -477,6 +492,7 @@ export default {
           "https://localhost:44376/api/v1/Employees/NewCode"
         );
         this.employee.employeeCode = data.data;
+
         this.showLoading = false; // ẩn loading
       } catch (error) {
         console.log(error);

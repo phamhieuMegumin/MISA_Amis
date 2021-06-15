@@ -31,7 +31,7 @@
             solo
           ></v-select>
           <!-- Dialog confirm -->
-          <v-dialog v-model="dialogConfirm" width="444px">
+          <v-dialog :persistent="true" v-model="dialogConfirm" width="444px">
             <DialogNotify
               :employeeCode="employee.employeeCode"
               @closeDialog="handleCloseDialog"
@@ -109,8 +109,10 @@ export default {
   watch: {
     selectedValue() {
       if (this.selectedValue == 2) {
-        this.dialogConfirm = true;
-        // this.deleteEmployee(this.employee.employeeId);
+        this.dialogConfirm = true; // mở dialog xác nhận xóa
+      }
+      if (this.selectedValue == 1) {
+        this.$emit("duplicateEmployee", this.employee.employeeId);
       }
       setTimeout(() => {
         this.selectedValue = 0;

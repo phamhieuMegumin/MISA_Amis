@@ -119,6 +119,7 @@
               @handleGetEmployeeID="getEmployeeID"
               @handleReload="getListEmployee"
               :listDeparment="listDepartment"
+              @duplicateEmployee="handleDuplicateEmployee"
             />
             <!-- End of employee detail -->
           </tbody>
@@ -280,7 +281,7 @@ export default {
     // Bắt dự kiện chỉnh sửa
     // CreateBy : PQHieu(12/06/2021)
     getEmployeeID(id) {
-      this.modeUpdate = true;
+      this.modeUpdate = true; //thay đổi sang updateMode khi thực hiện chỉnh sửa;
       this.getEmployeeInfo(id);
     },
 
@@ -320,6 +321,13 @@ export default {
       this.dialogNotify = true;
     },
 
+    // thực hiện nhân bản thông tin nhân viên
+    // CreatedBy : PQHieu(15/6/2021)
+    handleDuplicateEmployee(employeeId) {
+      this.getEmployeeInfo(employeeId);
+    },
+
+    // các hàm gọi API
     // Lấy danh sách nhân viên
     // CreateBy : PQHieu(11/06/2021)
     async getListEmployee() {
