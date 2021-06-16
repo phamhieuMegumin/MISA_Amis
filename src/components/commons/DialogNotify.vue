@@ -80,15 +80,27 @@
 <script>
 import Button from "./Button.vue";
 export default {
+  //#region Component
   components: { Button },
+  //#endregion
+
+  //#region Props
   props: ["employeeCode", "type", "notifyMessage"],
+  //#endregion
+  //#region Data
   data() {
     return {
       confirmEmployeeCode: "111",
       employeeCodeNotify: "111",
     };
   },
+  //#endregion
+
   methods: {
+    /**
+     * Thực thiện gọi hàm thêm nhân viên của component cha và đóng dialog
+     * CreatedBy : PQHieu(14/06/2021)
+     */
     onAdd() {
       this.$emit("onAddOrUpdate");
       this.$emit("closeDialog");

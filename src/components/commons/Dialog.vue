@@ -204,6 +204,7 @@
 </template>
 
 <script>
+//#region Import dữ liệu
 import Button from "../commons/Button.vue";
 import InputField from "../commons/InputField.vue";
 import CheckboxField from "../commons/CheckboxField.vue";
@@ -211,19 +212,28 @@ import DefaultEmployee from "../constant/DefaultEmployee";
 import DialogNotify from "../commons/DialogNotify.vue";
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
+//#endregion
+
 export default {
+  //#region Props
   props: [
     "dialogAddOrUpdate",
     "listDepartment",
     "employeeDetail",
     "modeUpdate",
   ],
+  //#endregion
+
+  //#region
   components: {
     Button,
     InputField,
     CheckboxField,
     DialogNotify,
   },
+  //#endregion
+
+  //#region Created
   created() {
     if (this.employeeDetail) {
       this.employee = { ...this.employeeDetail };
@@ -237,7 +247,9 @@ export default {
       );
     } else this.getNewEmployeeCode();
   },
+  //#endregion
 
+  //#region Data
   data() {
     return {
       // Nhân viên và các trường của nhân viên
@@ -280,9 +292,14 @@ export default {
       },
     };
   },
+  //#endregion
 
+  //#region Watch
   watch: {
-    // theo dõi đóng mở dialog và thực hiện các tác vụ
+    /**
+     * theo dõi đóng mở dialog và thực hiện các tác vụ
+     * CreatedBy : PQHieu(14/06/2021)
+     */
     dialogAddOrUpdate() {
       // đóng dialog
       // tác vụ : reset dialog, reset các lỗi validate của field, kiểm tra sự thay đổi của field
@@ -304,6 +321,11 @@ export default {
         if (!this.employeeDetail) this.getNewEmployeeCode(); // lấy mã nhân viên khi dialog được show
       }
     },
+
+    /**
+     * Theo dõi giá trị thông tin nhân viên
+     * CreatedBy: PQHieu(14/06/2021)
+     */
     employeeDetail() {
       // format giá trị ngày tháng
       if (this.employeeDetail) {
@@ -317,16 +339,31 @@ export default {
       }
       //
     },
+
+    /**
+     * Theo dõi giá trị mã nhân viên thay đổi
+     * CreatedBy : PQhieu(14/06/2021)
+     */
     "employee.employeeCode"() {
       if (this.employee.employeeCode.length > 0) {
         this.errorNotifyCode.status = false;
       }
     },
+
+    /**
+     * Theo dõi giá trị tên nhân viên thay đổi
+     * CreatedBy: PQHieu(14/06/2021)
+     */
     "employee.fullName"() {
       if (this.employee.fullName.length > 0) {
         this.errorNotifyFullName.status = false;
       }
     },
+
+    /**
+     * Theo dõi id phòng ban thay đổi
+     * CreatedBy : PQhieu(16/06/2021)
+     */
     "employee.deparmentId"() {
       if (this.employee.deparmentId.length > 0) {
         this.errorNotifyDepartment.status = false;
@@ -334,10 +371,17 @@ export default {
       }
     },
   },
+  //#endregion
 
+  //#region Methods
   methods: {
-    // Thay đổi chế độ cất và thêm
-    // CreatedBy : PQHieu(12/06/2021)
+    //#region Các hàm xử lý logic
+
+    /**
+     * Thay đổi chế độ cất và thêm
+     * CreatedBy : PQHieu(12/06/2021)
+     *
+     */
     handleSaveAndAdd() {
       // kiểm tra validate dữ liệu
       this.saveAndAddMode = true; // bật mode cất và thêm
@@ -357,33 +401,43 @@ export default {
       this.$emit("resetEmployeeDetail");
     },
 
-    // đóng dialog cảnh báo
-    // CreatedBy : PQHieu(12/6/2021)
+    /**
+     * đóng dialog cảnh báo
+     * CreatedBy : PQHieu(12/6/2021)
+     */
     handleCloseDangerDialog() {
       this.dialogNotifyDanger = false;
     },
 
-    // đóng dialog báo lỗi
-    // CreatedBy : PQHieu(12/6/2021)
+    /**
+     * đóng dialog báo lỗi
+     * CreatedBy : PQHieu(12/6/2021)
+     */
     handleCloseErrorDialog() {
       this.dialogNotifyError = false;
     },
 
-    // đóng dialog báo lỗi
-    // CreatedBy : PQHieu(12/6/2021)
+    /**
+     * đóng dialog báo lỗi
+     * CreatedBy : PQHieu(12/6/2021)
+     */
     handleCloseConfirmDialog() {
       this.dialogNotifyConfirm = false;
     },
 
-    // đóng tất cả dialog hiện tại
-    // CreatedBy: PQhieu(12/6/2021)
+    /**
+     * đóng tất cả dialog hiện tại
+     * CreatedBy: PQhieu(12/6/2021)
+     */
     handleCloseAllDialog() {
       this.handleCloseConfirmDialog();
       this.$emit("handleCloseDialog");
     },
 
-    // thêm hoặc sửa nhân viên
-    // CreatedBy : PQHieu(12/06/2021)
+    /**
+     * thêm hoặc sửa nhân viên
+     * CreatedBy : PQHieu(12/06/2021)
+     */
     handleAddOrUpdate() {
       // kiểm tra validate dữ liệu
       if (this.validate()) {
@@ -394,8 +448,10 @@ export default {
       }
     },
 
-    // Kiểm tra dữ liệu
-    // CreatedBy : PQHieu(13/06/2021)
+    /**
+     * Kiểm tra dữ liệu
+     * CreatedBy : PQHieu(13/06/2021)
+     */
     validate() {
       var isValid = true;
       if (this.employee.deparmentId.length == 0) {
@@ -423,8 +479,10 @@ export default {
       return isValid;
     },
 
-    // thêm nhân viên
-    // CreatedBy : PQHieu(12/06/2021)
+    /**
+     * thêm nhân viên
+     * CreatedBy : PQHieu(12/06/2021)
+     */
     async handleAdd() {
       this.employee.employeeId = uuidv4();
       try {
@@ -449,8 +507,10 @@ export default {
       }
     },
 
-    // sửa nhân viên
-    // CreatedBy : PQHieu(12/06/2021)
+    /**
+     * Cập nhật thông tin nhân viên
+     * CreatedBy : PQHieu(12/06/2021)
+     */
     async handelUpdate() {
       try {
         await axios({
@@ -474,24 +534,11 @@ export default {
       }
     },
 
-    // Lấy mã nhân viên mới
-    // CreatedBy: PQHieu(12/06/2021)
-    async getNewEmployeeCode() {
-      try {
-        this.showLoading = true; // hiện loading
-        const data = await axios.get(
-          "https://localhost:44376/api/v1/Employees/NewCode"
-        );
-        this.employee.employeeCode = data.data;
-        this.showLoading = false; // ẩn loading
-        return data.data;
-      } catch (error) {
-        console.log(error);
-      }
-    },
-
-    // format lại giá trị ngày tháng để hiển thị
-    // CreatedBy : PQHieu(12/06/2021)
+    /**
+     * format lại giá trị ngày tháng để hiển thị
+     * @param="date" : giá trị ngày cần format
+     * CreatedBy : PQHieu(12/06/2021)
+     */
     formatDateEmployee(date) {
       if (date) {
         return this.formatDate(date);
@@ -499,8 +546,11 @@ export default {
       return null;
     },
 
-    // chuyển đổi giá trị ngày tháng về yyyy-mm-dd
-    // CreatedBy : PQHieu(12/06/2021)
+    /**
+     * chuyển đổi giá trị ngày tháng về yyyy-mm-dd
+     * @param="date" : giá trị ngày cần format
+     * CreatedBy : PQHieu(12/06/2021)
+     */
     formatDate(date) {
       if (date) {
         const newDate = new Date(date);
@@ -514,8 +564,10 @@ export default {
       return null;
     },
 
-    // bắt sự kiện đóng dialog và thự hiện so sánh dữ liệu để đưa ra thông báo
-    // CreatedBy : PQhieu(14/06/2021)
+    /**
+     * bắt sự kiện đóng dialog và thự hiện so sánh dữ liệu để đưa ra thông báo
+     * CreatedBy : PQhieu(14/06/2021)
+     */
     onClose() {
       if (this.modeUpdate) {
         var newOb = this.employeeDetail;
@@ -527,8 +579,12 @@ export default {
       } else this.dialogNotifyConfirm = true;
     },
 
-    // so sánh 2 object
-    // CreatedBy : PQhieu(14/06/2021)
+    /**
+     * so sánh 2 object
+     * @param="object1" : object cần so sánh
+     * @param="object2" : object cần so sách
+     * CreatedBy : PQhieu(14/06/2021)
+     */
     handleCompareObject(object1, object2) {
       const keys1 = Object.keys(object1);
       const keys2 = Object.keys(object2);
@@ -542,7 +598,30 @@ export default {
       }
       return true;
     },
+    //#endregion
+
+    //#region Các hàm gọi API
+
+    /**
+     * Lấy mã nhân viên mới
+     * CreatedBy: PQHieu(12/06/2021)
+     */
+    async getNewEmployeeCode() {
+      try {
+        this.showLoading = true; // hiện loading
+        const data = await axios.get(
+          "https://localhost:44376/api/v1/Employees/NewCode"
+        );
+        this.employee.employeeCode = data.data;
+        this.showLoading = false; // ẩn loading
+        return data.data;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    //#endregion
   },
+  //#endregion
 };
 </script>
 

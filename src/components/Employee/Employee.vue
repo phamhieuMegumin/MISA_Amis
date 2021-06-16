@@ -50,15 +50,25 @@
 </template>
 
 <script>
+//#region Import dữ liệu
 import CheckboxField from "../commons/CheckboxField.vue";
 import DialogNotify from "../commons/DialogNotify.vue";
 import axios from "axios";
+//#endregion
+
 export default {
+  //#region Props
   props: ["employee", "listDeparment"],
+  //#endregion
+
+  //#region Components
   components: {
     CheckboxField,
     DialogNotify,
   },
+  //#endregion
+
+  //#region Data
   data() {
     return {
       // Các chức năng
@@ -80,9 +90,14 @@ export default {
       dialogConfirm: false,
     };
   },
+  //#endregion
+
+  //#region Computed
   computed: {
-    // format dữ liệu ngày tháng
-    // CreateBy : PQHieu(11/06/2021)
+    /**
+     * format dữ liệu ngày tháng
+     * CreateBy : PQHieu(11/06/2021)
+     */
     formatDateOfBirth() {
       if (this.employee.dateOfBirth) {
         const newDate = new Date(this.employee.dateOfBirth);
@@ -96,8 +111,10 @@ export default {
       return null;
     },
 
-    // format dữ liệu tên phòng ban theo id nhận được
-    // CreateBy : PQHieu(11/06/2021)
+    /**
+     * format dữ liệu tên phòng ban theo id nhận được
+     * CreateBy : PQHieu(11/06/2021)
+     */
     formatDeparmentName() {
       for (let i = 0; i < this.listDeparment.length; i++) {
         if (this.listDeparment[i].deparmentId === this.employee.deparmentId)
@@ -106,7 +123,14 @@ export default {
       return null;
     },
   },
+  //#endregion
+
+  //#region Watch
   watch: {
+    /**
+     * Bắt sự thay đổi của dropdown
+     * CreatedBy : PQHieu(12/06/2021)
+     */
     selectedValue() {
       if (this.selectedValue == 2) {
         this.dialogConfirm = true; // mở dialog xác nhận xóa
@@ -119,15 +143,24 @@ export default {
       }, 200);
     },
   },
+  //#endregion
+
+  //#region Methods
   methods: {
-    // Lấy id nhân viên
-    // CreateBy : PQHieu(11/06/2021)
+    /**
+     * Lấy id nhân viên
+     * @param="id" : id nhân viên cần lấy thông tin
+     * CreateBy : PQHieu(11/06/2021)
+     */
     getEmployeeInfoId(id) {
       this.$emit("handleGetEmployeeID", id);
     },
 
-    // Xóa nhân viên theo id
-    // CreatedBy : PQHieu(11/06/2021)
+    /**
+     * Xóa nhân viên theo id
+     * @param="employeeId" : mã nhân viên cần xóa
+     * CreatedBy : PQHieu(11/06/2021)
+     */
     async deleteEmployee(employeeId) {
       try {
         this.showLoading = true; // hiện loading
@@ -144,12 +177,15 @@ export default {
       }
     },
 
-    // đóng dialog confirm
-    // CreatedBy : PQHieu(13/06/2021)
+    /**
+     * đóng dialog confirm
+     * CreatedBy : PQHieu(13/06/2021)
+     */
     handleCloseDialog() {
       this.dialogConfirm = false;
     },
   },
+  //#endregion
 };
 </script>
 

@@ -3,6 +3,7 @@
     <div class="content-title">
       <h3 class="title-name">Nhân viên</h3>
       <!-- Dialog add  -->
+      <!--  -->
       <div class="dialog-add-update">
         <v-dialog v-model="dialogAddOrUpdate" width="900px" :persistent="true">
           <template v-slot:activator="{ on, attrs }">
@@ -25,6 +26,7 @@
           </v-card>
         </v-dialog>
       </div>
+      <!--  -->
       <!-- End of dialog add -->
 
       <!-- Dialog notify -->
@@ -40,6 +42,7 @@
       <!-- End of dialog notify -->
     </div>
     <!-- main content -->
+    <!--  -->
     <Loading ref="controlLoading" :controlShowLoading="showLoading" />
     <div class="main-content">
       <div class="search-content">
@@ -48,7 +51,7 @@
             :placeholder="'Tìm theo mã, tên nhân viên'"
             :searchField="true"
             v-model="filterValue"
-            v-debounce:300ms="getListEmployee"
+            v-debounce:300ms="handelFilter"
           />
         </div>
         <div class="refresh-btn" @click="getListEmployee">
@@ -58,6 +61,7 @@
           <div class="excel-icon"></div>
         </div>
       </div>
+      <!--  -->
       <!-- Table -->
       <div class="table-content">
         <table class="table">
@@ -111,6 +115,7 @@
             </tr>
           </thead>
           <tbody>
+            <!--  -->
             <!-- employee detail -->
             <Employee
               v-for="(employee, index) in listEmployee"
@@ -122,8 +127,11 @@
               @duplicateEmployee="handleDuplicateEmployee"
             />
             <!-- End of employee detail -->
+            <!--  -->
           </tbody>
         </table>
+        <!-- Pagination -->
+        <!--  -->
         <div class="pagination-container">
           <div class="total-item">
             Tổng số : <span class="total-value">{{ totalItem }}</span> bản ghi
@@ -162,14 +170,19 @@
             </div>
           </div>
         </div>
+        <!-- End of pagination -->
+        <!--  -->
       </div>
       <!-- end table-->
+      <!--  -->
     </div>
     <!-- end main content -->
+    <!--  -->
   </div>
 </template>
 
 <script>
+//#region Import dữ liệu
 import CheckboxField from "../commons/CheckboxField.vue";
 import Button from "../commons/Button.vue";
 import InputField from "../commons/InputField.vue";
@@ -181,7 +194,10 @@ import Employee from "../Employee/Employee.vue";
 import queryString from "query-string";
 import CustomSelect from "../commons/CustomSelect.vue";
 import DialogNotify from "../commons/DialogNotify.vue";
+//#endregion
+
 export default {
+  //#region Component
   components: {
     CheckboxField,
     Button,
@@ -192,6 +208,9 @@ export default {
     CustomSelect,
     DialogNotify,
   },
+  //#endregion
+
+  //#region Data
   data() {
     return {
       filterValue: null, // giá trị ô filter
@@ -232,22 +251,37 @@ export default {
       ],
     };
   },
+  //#endregion
   mounted() {
     this.getListEmployee(); // lấy danh sách nhân viên
     this.getListDepartment(); // lấy danh sách phòng ban
   },
+
+  //#region các hàm Watch
   watch: {
-    // bắt thay đổi của pageInt
+    /**
+     * Bắt thay đổi của pageInt
+     */
     pageInt() {
       this.getListEmployee();
     },
-    // bắt thay đổi của pageSize
+
+    /**
+     * bắt thay đổi của pageSize
+     */
     pageSize() {
       this.getListEmployee();
       this.pageInt = 1; // set lại về trang đầu tiên
     },
   },
+  //#endregion
+
+  //#region các hàm Computed
   computed: {
+    /**
+     * Tạo chuỗi queryString
+     * return chuỗi queryyString
+     */
     dataFilter() {
       const data = {
         pageInt: this.pageInt,
@@ -256,81 +290,128 @@ export default {
       };
       return queryString.stringify(data);
     },
+    /**
+     * Tính số lượng page
+     * return : Số lượng page
+     */
     totalPage() {
       return Math.ceil(this.totalItem / this.pageSize);
     },
   },
+  //#endregion
+
   methods: {
-    // bắt sự kiện đóng dialog của dialog con
-    // CreateBy : PQHieu(11/06/2021)
+    //#region Các hàm xử lý logic
+
+    /**
+     * bắt sự kiện đóng dialog của dialog con
+     * CreateBy : PQHieu(11/06/2021)
+     */
     closeDialog() {
       this.dialogAddOrUpdate = false;
     },
 
-    // bắt sự kiện mở dialog của dialog con
-    // CreateBy : PQHieu(11/06/2021)
+    /**
+     * bắt sự kiện mở dialog của dialog con
+     * CreateBy : PQHieu(11/06/2021)
+     */
     showDialog() {
       this.dialogAddOrUpdate = true;
     },
 
-    // đóng dialog notify
-    // CreatedBy : PQHieu(13/06/2021)
+    /**
+     * đóng dialog notify
+     * CreatedBy : PQHieu(13/06/2021)
+     */
     handleCloseDialog() {
       this.dialogNotify = false;
     },
 
-    // Bắt dự kiện chỉnh sửa
-    // CreateBy : PQHieu(12/06/2021)
+    /**
+     * Bắt dự kiện chỉnh sửa
+     * CreateBy : PQHieu(12/06/2021)
+     */
     getEmployeeID(id) {
       this.modeUpdate = true; //thay đổi sang updateMode khi thực hiện chỉnh sửa;
       this.getEmployeeInfo(id);
     },
 
-    // Reset EmployeeDetail and mode update
-    // CreateBy : PQHieu(12/06/2021)
+    /**
+     * Reset EmployeeDetail and mode update
+     *  CreateBy : PQHieu(12/06/2021)
+     */
     resetEmployeeDetail() {
       this.employeeDetail = null;
       this.modeUpdate = false;
     },
 
-    // Chuyển đến page đằng trước
-    // CreatedBy : PQHieu(12/6/2021)
+    /**
+     * Chuyển đến page đằng trước
+     * CreatedBy : PQHieu(12/6/2021)
+     */
     handlePrev() {
       if (this.pageInt > 1) {
         this.pageInt--;
       }
     },
 
-    // Chuyển đến page phía sau
-    // CreatedBy : PQHieu(12/6/2021)
+    /**
+     * Chuyển đến page phía sau
+     * CreatedBy : PQHieu(12/6/2021)
+     */
     handleNext() {
       if (this.pageInt < this.totalPage) {
         this.pageInt++;
       }
     },
 
-    // lấy giá trị pageSize mới
-    // CreatedBy : PQHieu(13/6/2021)
+    /**
+     * lấy giá trị pageSize mới
+     * @param = "value" : giá trị của page size
+     * CreatedBy : PQHieu(13/6/2021)
+     */
     handleChangeValue(value) {
       this.pageSize = value;
     },
 
-    // Hiển thị thông bán cho người dùng
-    // CreatedBy : PQHieu(13/6/2021)
+    /**
+     * Hiển thị thông bán cho người dùng
+     * @param="message" : Nội dung thông báo cần hiển thị
+     * CreatedBy : PQHieu(13/6/2021)
+     */
     handleNotify(message) {
       this.notifyMessage = message;
       this.dialogNotify = true;
     },
 
-    // thực hiện nhân bản thông tin nhân viên
-    // CreatedBy : PQHieu(15/6/2021)
+    /**
+     * thực hiện nhân bản thông tin nhân viên
+     * @param="employeeId" : id nhân viên cần lấy thông tin
+     * CreatedBy : PQHieu(15/6/2021)
+     */
     handleDuplicateEmployee(employeeId) {
       this.getEmployeeInfo(employeeId);
     },
 
-    // các hàm gọi API
-    // Lấy danh sách nhân viên
-    // CreateBy : PQHieu(11/06/2021)
+    /**
+     * Tìm kiếm theo tên hoặc mã nhân viên
+     * CreatedBy : PQhieu(14/06/2021)
+     */
+    handelFilter() {
+      this.pageInt = 1;
+      this.getListEmployee();
+    },
+    //#endregion
+
+    /**
+     *
+     */
+    //#region các hàm gọi API
+
+    /**
+     * Lấy danh sách nhân viên
+     * CreateBy : PQHieu(11/06/2021)
+     */
     async getListEmployee() {
       try {
         this.showLoading = true; // hiện loading
@@ -349,8 +430,10 @@ export default {
       }
     },
 
-    // Lấy danh sách phòng ban
-    // CreateBy : PQHieu(11/06/2021)
+    /**
+     * Lấy danh sách phòng ban
+     * CreateBy : PQHieu(11/06/2021)
+     */
     async getListDepartment() {
       try {
         this.showLoading = true; // hiện loading
@@ -365,8 +448,11 @@ export default {
       }
     },
 
-    // Lấy thông tin nhân viên theo id
-    // CreatedBy : PQHieu(11/06/2021)
+    /**
+     * Lấy thông tin nhân viên theo id
+     * @param="employeeId" : id nhân viên cần lấy thông tin
+     *  CreatedBy : PQHieu(11/06/2021)
+     */
     async getEmployeeInfo(employeeId) {
       try {
         this.showLoading = true; // hiện loading
@@ -381,10 +467,19 @@ export default {
       }
     },
 
+    /**
+     * Xuất dữ liệu ra excel
+     * CreatedBy : PQHieu(16/06/2021)
+     */
     exportExcel() {
       window.open("https://localhost:44376/api/v1/Employees/Export");
     },
   },
+
+  //#endregion
+  /**
+   *
+   */
 };
 </script>
 

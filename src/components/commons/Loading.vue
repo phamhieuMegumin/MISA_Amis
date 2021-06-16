@@ -15,20 +15,35 @@ export default {
     };
   },
   methods: {
+    /**
+     * Hiện loading
+     * CreatedBy : PQHieu(11/06/2021)
+     */
     showLoading() {
       this.isShowLoading = true;
     },
+
+    /**
+     * Ẩn loading
+     * CreatedBy:PQHieu(11/06/2021)
+     */
     hideLoading() {
       this.isShowLoading = false;
     },
   },
+  //#region Watch
   watch: {
+    /**
+     * Băt sự tahy đổi của loading
+     * CreatedBy : PQHieu(16/06/2021)
+     */
     controlShowLoading() {
       if (this.controlShowLoading) {
         this.showLoading();
       } else this.hideLoading();
     },
   },
+  //#endregion
 };
 </script>
 

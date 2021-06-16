@@ -32,7 +32,11 @@
 
 <script>
 export default {
+  //#region Props
   props: ["options", "value_key", "label_key", "value"],
+  //#endregion
+
+  //#region Data
   data() {
     return {
       isShow: false,
@@ -40,30 +44,44 @@ export default {
       currentIndex: -1,
     };
   },
+  //#endregion
+
+  //#region Methods
   methods: {
-    // đóng hiển thị option
-    // CreatedBy : PQHieu(10/6/2021)
+    /**
+     * đóng hiển thị option
+     * CreatedBy : PQHieu(10/6/2021)
+     */
     closeOptions() {
       this.isShow = false;
     },
 
-    // Bắt sự kiện chọn giá trị
-    // CreatedBy : PQHieu(10/6/2021)
+    /**
+     * Bắt sự kiện chọn giá trị
+     * @param="item" : giá trị được truyền vào
+     * @param="index" : thứ tự cảu giá trị trong option
+     * CreatedBy : PQHieu(10/6/2021)
+     */
     handleSelectValue(item, index) {
       this.setValue(item);
       this.currentIndex = index;
     },
 
-    // Cập nhật giá trị đã chọn
-    // CreatedBy : PQHieu(10/6/2021)
+    /**
+     * Cập nhật giá trị đã chọn
+     * @param="item" : giá trị được truyền vào
+     * CreatedBy : PQHieu(10/6/2021)
+     */
     setValue(item) {
       this.closeOptions();
       this.label_value = item[this.label_key];
       this.$emit("changeValue", item[this.value_key]);
     },
 
-    // Bắt sự kiện nhấn phím lên
-    // CreatedBy : PQHieu(10/6/2021)
+    /**
+     * Bắt sự kiện nhấn phím lên
+     * CreatedBy : PQHieu(10/6/2021)
+     */
     handleKeyUp() {
       this.currentIndex--;
       if (this.currentIndex < 0) {
@@ -72,8 +90,10 @@ export default {
       this.isShow = true;
     },
 
-    // Bắt sự kiện nhấn phím xuống
-    // CreatedBy : PQHieu(10/6/2021)
+    /**
+     * Bắt sự kiện nhấn phím xuống
+     * CreatedBy : PQHieu(10/6/2021)
+     */
     handleKeyDown() {
       this.currentIndex++;
       if (this.currentIndex > this.options.length - 1) {
@@ -82,15 +102,19 @@ export default {
       this.isShow = true;
     },
 
-    // Bắt sự kiện nhấn phím enter
-    // CreatedBy : PQHieu(10/6/2021)
+    /**
+     * Bắt sự kiện nhấn phím enter
+     * CreatedBy : PQHieu(10/6/2021)
+     */
     handleEnter() {
       this.isShow = false;
       this.setValue(this.options[this.currentIndex]);
     },
 
-    // Set giá trị khi khởi tạo
-    // CreatedBy : PQHieu(10/6/2021)
+    /**
+     * Set giá trị khi khởi tạo
+     * CreatedBy : PQHieu(10/6/2021)
+     */
     setDefaultValue() {
       this.options.forEach((option) => {
         if (option[this.value_key] == this.value) {
@@ -102,6 +126,7 @@ export default {
   created() {
     this.setDefaultValue();
   },
+  //#endregion
 };
 </script>
 
