@@ -13,6 +13,7 @@
         :value="value ? value : inputValue"
         @input="getValue"
         :class="[required && errorNotify.status ? 'errorInput' : '']"
+        ref="onAutofocus"
       />
       <div v-if="searchField" class="search-icon"></div>
       <div v-if="required && errorNotify.status" class="validateMessage">
@@ -34,7 +35,11 @@ export default {
     "autofocus",
     "errorNotify",
   ],
-
+  mounted() {
+    if (this.autofocus) {
+      this.$refs.onAutofocus.focus();
+    }
+  },
   data() {
     return {
       inputValue: "",

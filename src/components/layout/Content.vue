@@ -54,7 +54,7 @@
         <div class="refresh-btn" @click="getListEmployee">
           <div class="refresh-icon"></div>
         </div>
-        <div class="export-btn">
+        <div class="export-btn" @click="exportExcel">
           <div class="excel-icon"></div>
         </div>
       </div>
@@ -244,6 +244,7 @@ export default {
     // bắt thay đổi của pageSize
     pageSize() {
       this.getListEmployee();
+      this.pageInt = 1; // set lại về trang đầu tiên
     },
   },
   computed: {
@@ -378,6 +379,10 @@ export default {
       } catch (error) {
         console.log(error);
       }
+    },
+
+    exportExcel() {
+      window.open("https://localhost:44376/api/v1/Employees/Export");
     },
   },
 };

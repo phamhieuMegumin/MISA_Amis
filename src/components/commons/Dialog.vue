@@ -191,7 +191,7 @@
           <Button :content="'Hủy'" :btnWhite="true" />
         </div>
         <div class="btn-group">
-          <div class="pr-12" @click="handleAddOrUpdate">
+          <div class="par-12" @click="handleAddOrUpdate">
             <Button :content="'Cất'" :btnWhite="true" />
           </div>
           <div @click="handleSaveAndAdd">
@@ -382,15 +382,6 @@ export default {
       this.$emit("handleCloseDialog");
     },
 
-    // gán giá mã nhân viên mới khi ở chế độ cất và thêm
-    // CreatedBy : PQHieu(15/6/2021)
-    getNewEmployeeCodeInSaveAndAddMode() {
-      // lấy mã nhân viên mới
-      var newCode = this.employee.employeeCode.slice(3);
-      newCode = parseInt(newCode) + 1;
-      return `NV-${newCode}`; // gán mã nhân viên mới
-    },
-
     // thêm hoặc sửa nhân viên
     // CreatedBy : PQHieu(12/06/2021)
     handleAddOrUpdate() {
@@ -444,7 +435,7 @@ export default {
         });
         this.$emit("onNotify", "Nhân viên đã được thêm thành công");
         if (this.saveAndAddMode) {
-          var newCode = this.getNewEmployeeCodeInSaveAndAddMode(); // lấy mã nhân viên mới
+          var newCode = await this.getNewEmployeeCode(); // lấy mã nhân viên mới
           this.employee = { ...DefaultEmployee, employeeCode: newCode }; // resetDialog
         }
         this.$emit("handleReload"); // load laị dữ liệu
@@ -469,7 +460,7 @@ export default {
         });
         this.$emit("onNotify", "Nhân viên đã được cập nhật");
         if (this.saveAndAddMode) {
-          var newCode = this.getNewEmployeeCodeInSaveAndAddMode(); // lấy mã nhân viên mới
+          var newCode = await this.getNewEmployeeCode(); // lấy mã nhân viên mới
           this.employee = { ...DefaultEmployee, employeeCode: newCode }; // resetDialog
         }
         this.$emit("handleReload"); // load laị dữ liệu
@@ -492,8 +483,8 @@ export default {
           "https://localhost:44376/api/v1/Employees/NewCode"
         );
         this.employee.employeeCode = data.data;
-
         this.showLoading = false; // ẩn loading
+        return data.data;
       } catch (error) {
         console.log(error);
       }
@@ -634,17 +625,17 @@ export default {
 .v-application .pr-6 {
   padding-right: 6px !important;
 }
-.pr-12 {
-  padding-right: 12px;
+.par-12 {
+  padding-right: 12px !important;
 }
 .p-12 {
-  padding-bottom: 12px;
+  padding-bottom: 12px !important;
 }
 .pt-24 {
-  padding-top: 24px;
+  padding-top: 24px !important;
 }
 .pb-24 {
-  padding-bottom: 24px;
+  padding-bottom: 24px !important;
 }
 .modal-content-left {
   padding-right: 26px;

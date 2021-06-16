@@ -43,8 +43,14 @@ export default {
 .loading {
   width: 48px;
   height: 48px;
+  animation: round 1s linear infinite;
 }
 .loading img {
   width: 100%;
+}
+@keyframes round {
+  100% {
+    transform: rotate(360deg);
+  }
 }
 </style>
