@@ -120,6 +120,7 @@
             <Employee
               v-for="(employee, index) in listEmployee"
               :key="index"
+              :index="index"
               :employee="employee"
               @handleGetEmployeeID="getEmployeeID"
               @handleReload="getListEmployee"

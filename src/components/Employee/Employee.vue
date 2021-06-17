@@ -14,22 +14,43 @@
     <td>{{ employee.bankAccount }}</td>
     <td>{{ employee.bankName }}</td>
     <td class="no--right-border">{{ employee.bankBranch }}</td>
-    <td class="sticky no--right-border">
+    <td
+      class="sticky no--right-border"
+      :style="
+        showDropTop
+          ? { 'z-index': 100 - index + 5 }
+          : { 'z-index': 100 - index }
+      "
+    >
       <div class="border-left border-left--dotted"></div>
       <div class="fix-container">
         <span @click="getEmployeeInfoId(employee.employeeId)">Sửa</span>
 
         <div class="choose-btn">
           <!-- dropdown -->
-          <v-select
-            :items="selectOptions"
-            item-value="id"
-            v-model="selectedValue"
-            item-text="name"
-            label="Solo field"
-            dense
-            solo
-          ></v-select>
+          <div class="drop-container" tabindex="0" @focusout="closeDrop">
+            <div
+              class="drop-icon-wrap"
+              @click="handelShowDrop"
+              :class="showDrop ? 'active' : null"
+            >
+              <div class="drop-icon"></div>
+            </div>
+            <div
+              class="drop-option"
+              v-if="showDrop"
+              :class="showDropTop ? 'drop-top' : null"
+            >
+              <div
+                class="option"
+                @click="$emit('duplicateEmployee', employee.employeeId)"
+              >
+                Nhân bản
+              </div>
+              <div class="option" @click="dialogConfirm = true">Xóa</div>
+              <div class="option">Ngừng sử dụng</div>
+            </div>
+          </div>
           <!-- Dialog confirm -->
           <v-dialog :persistent="true" v-model="dialogConfirm" width="444px">
             <DialogNotify
@@ -58,7 +79,7 @@ import axios from "axios";
 
 export default {
   //#region Props
-  props: ["employee", "listDeparment"],
+  props: ["employee", "listDeparment", "index"],
   //#endregion
 
   //#region Components
@@ -71,23 +92,9 @@ export default {
   //#region Data
   data() {
     return {
-      // Các chức năng
-      selectOptions: [
-        {
-          id: 1,
-          name: "Nhân bản",
-        },
-        {
-          id: 2,
-          name: "Xóa",
-        },
-        {
-          id: 3,
-          name: "Ngừng sử dụng",
-        },
-      ],
-      selectedValue: null, // lựa chọn các chức năng
       dialogConfirm: false,
+      showDrop: false, // đóng mở dropdown
+      showDropTop: false, // điều chỉnh hướng mở option lên trên
     };
   },
   //#endregion
@@ -121,26 +128,6 @@ export default {
           return this.listDeparment[i].deparmentName;
       }
       return null;
-    },
-  },
-  //#endregion
-
-  //#region Watch
-  watch: {
-    /**
-     * Bắt sự thay đổi của dropdown
-     * CreatedBy : PQHieu(12/06/2021)
-     */
-    selectedValue() {
-      if (this.selectedValue == 2) {
-        this.dialogConfirm = true; // mở dialog xác nhận xóa
-      }
-      if (this.selectedValue == 1) {
-        this.$emit("duplicateEmployee", this.employee.employeeId);
-      }
-      setTimeout(() => {
-        this.selectedValue = 0;
-      }, 200);
     },
   },
   //#endregion
@@ -184,6 +171,29 @@ export default {
     handleCloseDialog() {
       this.dialogConfirm = false;
     },
+
+    /**
+     * dóng mở dropdown
+     * CreatedBy : PQHieu(13/06/2021)
+     */
+    handelShowDrop(e) {
+      if (e.screenY > 550) {
+        this.showDropTop = true;
+      }
+      this.showDrop = !this.showDrop;
+      if (!this.showDrop) {
+        this.showDropTop = false;
+      }
+    },
+
+    /**
+     * đóng option và reset các thuộc tính
+     * CreatedBy : PQHieu(13/06/2021)
+     */
+    closeDrop() {
+      this.showDrop = false;
+      this.showDropTop = false;
+    },
   },
   //#endregion
 };
@@ -196,5 +206,49 @@ export default {
 }
 .fix-container span {
   cursor: pointer;
+}
+.drop-container {
+  position: relative;
+}
+.drop-icon-wrap {
+  padding: 0 5px;
+  border: 1px solid transparent;
+  width: 26px;
+}
+.drop-icon-wrap.active {
+  border-color: #0075c0;
+}
+.drop-option {
+  position: absolute;
+  top: calc(100% + 7px);
+  right: -10px;
+}
+.drop-option.drop-top {
+  position: absolute;
+  bottom: calc(100% + 7px);
+  right: -10px;
+  top: auto;
+}
+.drop-icon {
+  width: 16px;
+  height: 14px;
+  max-height: 16px;
+  max-width: 16px;
+  background: url("../../assets/img/Sprites.64af8f61.svg") no-repeat -897px -360px;
+}
+.drop-option {
+  border: 1px solid #babec5;
+  width: 120.6px;
+  border-radius: 3px;
+  background: #fff;
+  padding: 2px 1px;
+}
+.option {
+  padding: 5px 10px;
+  text-align: left;
+}
+.option:hover {
+  background: #e8e9ec;
+  color: #08bf1e;
 }
 </style>
