@@ -12,8 +12,10 @@
         :placeholder="placeholder"
         :value="value ? value : inputValue"
         @input="getValue"
-        :class="[required && errorNotify.status ? 'errorInput' : '']"
-        ref="onAutofocus"
+        :class="[
+          required && errorNotify.status ? 'errorInput' : '',
+          type == 'date' && value ? 'active' : null,
+        ]"
       />
       <div v-if="searchField" class="search-icon"></div>
       <div v-if="required && errorNotify.status" class="validateMessage">
@@ -35,11 +37,6 @@ export default {
     "autofocus",
     "errorNotify",
   ],
-  mounted() {
-    if (this.autofocus) {
-      this.$refs.onAutofocus.focus();
-    }
-  },
   data() {
     return {
       inputValue: "",
@@ -121,5 +118,25 @@ export default {
 }
 .errorInput {
   border-color: red !important;
+}
+input[type="date"] {
+  padding-right: 5px;
+  font-style: italic;
+  text-transform: uppercase;
+  color: #babec5;
+}
+
+input[type="date"].active {
+  color: #000;
+  font-style: normal;
+}
+input[type="date"]::-webkit-calendar-picker-indicator {
+  color: #babec5;
+  opacity: 1;
+  display: block;
+  background: url("../../assets/img/Sprites.64af8f61.svg") no-repeat -128px -310px;
+  width: 14px;
+  height: 16px;
+  border-width: thin;
 }
 </style>
