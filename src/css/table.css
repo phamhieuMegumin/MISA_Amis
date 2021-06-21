@@ -91,8 +91,14 @@ tr:hover td {
   border-bottom: 1px solid #c7c7c7;
   box-shadow: 0 1px 1px -1px #bbb;
   z-index: 101;
+  border-left: 1px solid #c7c7c7;
 }
-
+.date-col {
+  text-align: center;
+}
+.table-head-checkbox {
+  border-left: none !important;
+}
 .m-250 {
   min-width: 250px;
 }
@@ -109,6 +115,7 @@ tr:hover td {
   right: 0;
   text-align: center !important;
   z-index: 101;
+  border-left: none !important;
 }
 .th-sticky th {
   height: 34px;

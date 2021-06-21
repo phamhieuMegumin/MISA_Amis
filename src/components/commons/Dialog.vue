@@ -68,7 +68,7 @@
                 :required="true"
                 v-model="employee.employeeCode"
                 :errorNotify="errorNotifyCode"
-                :autofocus="true"
+                ref="toFocus"
               />
             </div>
             <div class="input-name">
@@ -81,7 +81,7 @@
             </div>
           </div>
           <div class="p-12">
-            <label>Đơn vị</label>
+            <label>Đơn vị <span class="required-icon">*</span></label>
             <v-autocomplete
               solo
               v-model="employee.deparmentId"
@@ -178,6 +178,11 @@
           <div class=" pr-6">
             <InputField :label="'Chi nhánh'" v-model="employee.bankBranch" />
           </div>
+          <input
+            type="text"
+            class="getFocus"
+            @focus="$refs.toFocus.handleFocus()"
+          />
         </div>
       </div>
     </div>
@@ -224,7 +229,7 @@ export default {
   ],
   //#endregion
 
-  //#region
+  //#region Component
   components: {
     Button,
     InputField,
@@ -245,7 +250,15 @@ export default {
       this.employee.identityDate = this.formatDateEmployee(
         this.employee.identityDate
       );
-    } else this.getNewEmployeeCode();
+      setTimeout(() => {
+        this.$refs.toFocus.handleFocus();
+      }, 200);
+    } else {
+      this.getNewEmployeeCode();
+      setTimeout(() => {
+        this.$refs.toFocus.handleFocus();
+      }, 200);
+    }
   },
   //#endregion
 
@@ -318,7 +331,12 @@ export default {
       // Mở dialog
       // tác vụ : lấy mã nhân viên mới
       else {
-        if (!this.employeeDetail) this.getNewEmployeeCode(); // lấy mã nhân viên khi dialog được show
+        if (!this.employeeDetail) {
+          this.getNewEmployeeCode(); // lấy mã nhân viên khi dialog được show
+        }
+        setTimeout(() => {
+          this.$refs.toFocus.handleFocus();
+        }, 200);
       }
     },
 
@@ -390,15 +408,6 @@ export default {
           this.handleAdd();
         } else this.handelUpdate();
       }
-      // reset data
-      const resetData = {
-        status: false,
-        errorMessage: "",
-      };
-      this.errorNotifyCode = { ...resetData }; // reset hiển thị validate Code
-      this.errorNotifyFullName = { ...resetData }; // reset hiển thị validate fullName
-      this.errorNotifyDepartment = { ...resetData }; // reset hiển thị validate department
-      this.$emit("resetEmployeeDetail");
     },
 
     /**
@@ -476,62 +485,13 @@ export default {
         this.dialogNotifyError = true; // hiển thị dialog báo lỗi
         isValid = false;
       }
+      // if(this.checkDepartmentValue()){
+      //   console.log()
+      // }
+      // setTimeout(() => {
+      //   console.log(this.checkDepartmentValue());
+      // }, 200);
       return isValid;
-    },
-
-    /**
-     * thêm nhân viên
-     * CreatedBy : PQHieu(12/06/2021)
-     */
-    async handleAdd() {
-      this.employee.employeeId = uuidv4();
-      try {
-        await axios({
-          method: "post",
-          url: "https://localhost:44376/api/v1/Employees",
-          data: this.employee,
-        });
-        this.$emit("onNotify", "Nhân viên đã được thêm thành công");
-        if (this.saveAndAddMode) {
-          var newCode = await this.getNewEmployeeCode(); // lấy mã nhân viên mới
-          this.employee = { ...DefaultEmployee, employeeCode: newCode }; // resetDialog
-        }
-        this.$emit("handleReload"); // load laị dữ liệu
-      } catch (error) {
-        if (error.response.status == "400") {
-          if (error.response.data.data.detail.fieldNotValid == "EmployeeCode") {
-            this.notifyMessage = error.response.data.userMsg;
-            this.dialogNotifyDanger = true; // hiển thị dialog cảnh báo
-          }
-        }
-      }
-    },
-
-    /**
-     * Cập nhật thông tin nhân viên
-     * CreatedBy : PQHieu(12/06/2021)
-     */
-    async handelUpdate() {
-      try {
-        await axios({
-          method: "put",
-          url: `https://localhost:44376/api/v1/Employees/${this.employee.employeeId}`,
-          data: this.employee,
-        });
-        this.$emit("onNotify", "Nhân viên đã được cập nhật");
-        if (this.saveAndAddMode) {
-          var newCode = await this.getNewEmployeeCode(); // lấy mã nhân viên mới
-          this.employee = { ...DefaultEmployee, employeeCode: newCode }; // resetDialog
-        }
-        this.$emit("handleReload"); // load laị dữ liệu
-      } catch (error) {
-        if (error.response.status == "400") {
-          if (error.response.data.data.detail.fieldNotValid == "EmployeeCode") {
-            this.notifyMessage = error.response.data.userMsg;
-            this.dialogNotifyDanger = true; // hiển thị dialog cảnh báo
-          }
-        }
-      }
     },
 
     /**
@@ -598,9 +558,101 @@ export default {
       }
       return true;
     },
+
+    /**
+     * Kiểm tra giá trị phòng ban hợp lệ
+     * CreatedBy : PQHieu(19/06/2021)
+     */
+    checkDepartmentValue() {
+      if (this.employee.deparmentId.length != 36) {
+        for (var i = 0; i < this.listDepartment.length; i++) {
+          if (
+            this.listDepartment[i].deparmentName.trim().toLowerCase() ==
+            this.employee.deparmentId.trim().toLowerCase()
+          ) {
+            this.employee.deparmentId = this.listDepartment[i].deparmentId;
+            return true;
+          }
+        }
+      }
+      return false;
+    },
     //#endregion
 
     //#region Các hàm gọi API
+
+    /**
+     * thêm nhân viên
+     * CreatedBy : PQHieu(12/06/2021)
+     */
+    async handleAdd() {
+      this.employee.employeeId = uuidv4();
+      try {
+        await axios({
+          method: "post",
+          url: "https://localhost:44376/api/v1/Employees",
+          data: this.employee,
+        });
+        this.$emit("onNotify", "Nhân viên đã được thêm thành công");
+        if (this.saveAndAddMode) {
+          var newCode = await this.getNewEmployeeCode(); // lấy mã nhân viên mới
+          this.employee = { ...DefaultEmployee, employeeCode: newCode }; // resetDialog
+          // reset data
+          const resetData = {
+            status: false,
+            errorMessage: "",
+          };
+          this.errorNotifyCode = { ...resetData }; // reset hiển thị validate Code
+          this.errorNotifyFullName = { ...resetData }; // reset hiển thị validate fullName
+          this.errorNotifyDepartment = { ...resetData }; // reset hiển thị validate department
+          this.$emit("resetEmployeeDetail");
+        }
+        this.$emit("handleReload"); // load laị dữ liệu
+      } catch (error) {
+        if (error.response.status == "400") {
+          if (error.response.data.data.detail.fieldNotValid == "EmployeeCode") {
+            this.notifyMessage = error.response.data.userMsg;
+            this.dialogNotifyDanger = true; // hiển thị dialog cảnh báo
+          }
+        }
+      }
+    },
+
+    /**
+     * Cập nhật thông tin nhân viên
+     * CreatedBy : PQHieu(12/06/2021)
+     */
+    async handelUpdate() {
+      try {
+        await axios({
+          method: "put",
+          url: `https://localhost:44376/api/v1/Employees/${this.employee.employeeId}`,
+          data: this.employee,
+        });
+        this.$emit("onNotify", "Nhân viên đã được cập nhật");
+        if (this.saveAndAddMode) {
+          var newCode = await this.getNewEmployeeCode(); // lấy mã nhân viên mới
+          this.employee = { ...DefaultEmployee, employeeCode: newCode }; // resetDialog
+          // reset data
+          const resetData = {
+            status: false,
+            errorMessage: "",
+          };
+          this.errorNotifyCode = { ...resetData }; // reset hiển thị validate Code
+          this.errorNotifyFullName = { ...resetData }; // reset hiển thị validate fullName
+          this.errorNotifyDepartment = { ...resetData }; // reset hiển thị validate department
+          this.$emit("resetEmployeeDetail");
+        }
+        this.$emit("handleReload"); // load laị dữ liệu
+      } catch (error) {
+        if (error.response.status == "400") {
+          if (error.response.data.data.detail.fieldNotValid == "EmployeeCode") {
+            this.notifyMessage = error.response.data.userMsg;
+            this.dialogNotifyDanger = true; // hiển thị dialog cảnh báo
+          }
+        }
+      }
+    },
 
     /**
      * Lấy mã nhân viên mới
@@ -791,5 +843,12 @@ export default {
 
 .gender-label {
   margin-bottom: 8px;
+}
+.getFocus {
+  width: 0;
+  height: 0;
+}
+.required-icon {
+  color: red;
 }
 </style>

@@ -120,6 +120,10 @@ label {
 .modal-content-left .v-messages.error--text {
   height: 18px;
 }
+.v-list-item {
+  min-height: 32px !important;
+  height: 32px;
+}
 .modal-content-left .error--text .v-messages__message {
   color: #fff;
   line-height: 18px;

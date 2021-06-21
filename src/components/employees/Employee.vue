@@ -7,7 +7,7 @@
     <td>{{ employee.employeeCode }}</td>
     <td>{{ employee.fullName }}</td>
     <td>{{ employee.genderName }}</td>
-    <td>{{ formatDateOfBirth }}</td>
+    <td class="date-col">{{ formatDateOfBirth }}</td>
     <td>{{ employee.identityNumber }}</td>
     <td>{{ employee.positionName }}</td>
     <td>{{ formatDeparmentName }}</td>
@@ -38,8 +38,10 @@
             </div>
             <div
               class="drop-option"
-              v-if="showDrop"
-              :class="showDropTop ? 'drop-top' : null"
+              :class="[
+                showDropTop ? 'drop-top' : null,
+                showDrop ? 'active' : null,
+              ]"
             >
               <div
                 class="option"
@@ -220,14 +222,26 @@ export default {
 }
 .drop-option {
   position: absolute;
-  top: calc(100% + 7px);
+  top: calc(100% + 10px);
   right: -10px;
+  visibility: hidden;
+  opacity: 0;
+}
+
+.drop-option.active {
+  visibility: visible;
+  opacity: 1;
+  top: calc(100% + 7px);
+  transition: 0.2s linear;
 }
 .drop-option.drop-top {
   position: absolute;
-  bottom: calc(100% + 7px);
+  bottom: calc(100% + 10px);
   right: -10px;
   top: auto;
+}
+.drop-option.drop-top.active {
+  bottom: calc(100% + 7px);
 }
 .drop-icon {
   width: 16px;

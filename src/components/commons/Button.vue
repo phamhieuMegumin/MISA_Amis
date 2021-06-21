@@ -28,7 +28,7 @@ export default {
 }
 
 .btn:active {
-  background: #01b075;
+  background: #2ca01c;
 }
 
 .btn.btn-white {

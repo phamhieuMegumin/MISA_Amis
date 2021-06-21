@@ -131,50 +131,50 @@
             <!--  -->
           </tbody>
         </table>
-        <!-- Pagination -->
-        <!--  -->
-        <div class="pagination-container">
-          <div class="total-item">
-            Tổng số : <span class="total-value">{{ totalItem }}</span> bản ghi
-          </div>
-          <div class="pagination-wrapper">
-            <div class="dropdown-pagiantion">
-              <CustomSelect
-                tabindex="0"
-                label_key="name"
-                value_key="value"
-                :options="options"
-                v-model="pageSize"
-                @changeValue="handleChangeValue"
-              />
-            </div>
-            <div class="paginations">
-              <button
-                class="pagination-prev-btn"
-                :class="[pageInt > 1 ? 'active' : null]"
-                @click="handlePrev"
-              >
-                Trước
-              </button>
-              <v-pagination
-                v-model="pageInt"
-                :length="totalPage"
-                color="#fff"
-              ></v-pagination>
-              <button
-                class="pagination-next-btn"
-                :class="[pageInt < totalPage ? 'active' : null]"
-                @click="handleNext"
-              >
-                Sau
-              </button>
-            </div>
-          </div>
-        </div>
-        <!-- End of pagination -->
-        <!--  -->
       </div>
       <!-- end table-->
+      <!--  -->
+      <!-- Pagination -->
+      <!--  -->
+      <div class="pagination-container">
+        <div class="total-item">
+          Tổng số : <span class="total-value">{{ totalItem }}</span> bản ghi
+        </div>
+        <div class="pagination-wrapper">
+          <div class="dropdown-pagiantion">
+            <CustomSelect
+              tabindex="0"
+              label_key="name"
+              value_key="value"
+              :options="options"
+              v-model="pageSize"
+              @changeValue="handleChangeValue"
+            />
+          </div>
+          <div class="paginations">
+            <button
+              class="pagination-prev-btn"
+              :class="[pageInt > 1 ? 'active' : null]"
+              @click="handlePrev"
+            >
+              Trước
+            </button>
+            <v-pagination
+              v-model="pageInt"
+              :length="totalPage"
+              color="#fff"
+            ></v-pagination>
+            <button
+              class="pagination-next-btn"
+              :class="[pageInt < totalPage ? 'active' : null]"
+              @click="handleNext"
+            >
+              Sau
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- End of pagination -->
       <!--  -->
     </div>
     <!-- end main content -->
@@ -191,7 +191,7 @@ import Dialog from "../commons/Dialog.vue";
 import Loading from "../commons/Loading.vue";
 import axios from "axios";
 import "../../css/table.css";
-import Employee from "../Employee/Employee.vue";
+import Employee from "../employees/Employee.vue";
 import queryString from "query-string";
 import CustomSelect from "../commons/CustomSelect.vue";
 import DialogNotify from "../commons/DialogNotify.vue";
@@ -508,11 +508,12 @@ export default {
 }
 .table-content {
   overflow-x: auto;
-  height: calc(100vh - 94px - 48px - 64px);
+  overflow-y: auto;
+  height: calc(100vh - 94px - 48px - 64px - 46px);
 }
 ::-webkit-scrollbar {
   width: 10px;
-  height: 10px;
+  height: 14px;
   background: #fff;
 }
 ::-webkit-scrollbar-thumb {
@@ -523,7 +524,7 @@ export default {
 }
 /* search content */
 .search-content {
-  padding: 16px;
+  padding: 16px 0;
   display: flex;
   justify-content: flex-end;
   align-items: flex-end;

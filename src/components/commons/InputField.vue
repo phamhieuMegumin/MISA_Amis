@@ -8,6 +8,7 @@
       :class="[searchField ? 'search-field' : '']"
     >
       <input
+        ref="autoFocus"
         :type="type ? type : 'text'"
         :placeholder="placeholder"
         :value="value ? value : inputValue"
@@ -34,7 +35,6 @@ export default {
     "type",
     "value",
     "required",
-    "autofocus",
     "errorNotify",
   ],
   data() {
@@ -47,18 +47,39 @@ export default {
   },
 
   methods: {
+    /**
+     * Truyền dữ liệu nhận được ra ngoài dialog
+     * CreatedBy: PQHieu(18/06/2021)
+     */
     getValue(e) {
       this.$emit("input", e.target.value);
     },
+
+    /**
+     * Hiển thị thông báo lỗi
+     * CreatedBy : PQHieu(18/06/2021)
+     */
     handleValidate() {
       if (this.required && this.validate) {
         this.showMessage = true;
       }
     },
+
+    /**
+     * đóng hiển thị thông báo lỗi
+     * CreatedBy : PQHieu(18/06/2021)
+     */
     handleLeave() {
       if (this.required && this.validate) {
         this.showMessage = false;
       }
+    },
+    /**
+     * focus vào 1 element
+     * CreatedBy : PQHieu(18/06/2021)
+     */
+    handleFocus() {
+      this.$refs.autoFocus.focus();
     },
   },
 };

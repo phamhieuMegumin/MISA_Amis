@@ -79,14 +79,13 @@ export default {};
 .header-right {
   display: flex;
   align-items: center;
-  padding: 0 20px;
 }
 .header-right .logo-dropdown-m {
   background-position: -1076px -28px;
 }
 .heaser-user {
   display: flex;
-  padding: 0 16px;
+  padding-left: 16px;
   cursor: pointer;
   align-items: center;
 }
