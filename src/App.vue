@@ -1,6 +1,6 @@
 <template>
   <v-app id="inspire">
-    <v-navigation-drawer v-model="drawer" app>
+    <v-navigation-drawer app>
       <!--Nav bar  -->
       <NavBar />
     </v-navigation-drawer>
@@ -25,6 +25,5 @@ import Content from "./components/layout/Content.vue";
 import "./css/main.css";
 export default {
   components: { NavBar, Header, Content },
-  data: () => ({ drawer: null }),
 };
 </script>

@@ -2,7 +2,7 @@
   <!-- employee detail -->
   <tr @dblclick="getEmployeeInfoId(employee.employeeId)">
     <td class="table-checkbox">
-      <CheckboxField />
+      <CheckboxField ref="checkbox" @handleChecked="handleChecked" />
     </td>
     <td>{{ employee.employeeCode }}</td>
     <td>{{ employee.fullName }}</td>
@@ -81,7 +81,7 @@ import axios from "axios";
 
 export default {
   //#region Props
-  props: ["employee", "listDeparment", "index"],
+  props: ["employee", "listDeparment", "index", "isCheckedAll"],
   //#endregion
 
   //#region Components
@@ -98,6 +98,16 @@ export default {
       showDrop: false, // đóng mở dropdown
       showDropTop: false, // điều chỉnh hướng mở option lên trên
     };
+  },
+  //#endregion
+
+  //#region Watch
+  watch: {
+    isCheckedAll() {
+      if (this.isCheckedAll) {
+        this.$refs.checkbox.onIsChecked();
+      } else this.$refs.checkbox.onDisaleChecked();
+    },
   },
   //#endregion
 
@@ -195,6 +205,14 @@ export default {
     closeDrop() {
       this.showDrop = false;
       this.showDropTop = false;
+    },
+
+    /**
+     * Theo dõi những ô checkbox được chọn
+     * CreatedBy : PQhieu(29/06/2021)
+     */
+    handleChecked(isCheck) {
+      this.$emit("handleDeleteList", this.employee.employeeId, isCheck);
     },
   },
   //#endregion

@@ -11,7 +11,7 @@
               <Button content="Thêm mới nhân viên" />
             </div>
           </template>
-          <v-card height="calc(100vh - 34px)">
+          <v-card height="620">
             <Dialog
               :employeeDetail="employeeDetail"
               @handleCloseDialog="closeDialog"
@@ -67,7 +67,14 @@
         <table class="table">
           <thead>
             <tr>
-              <th class="table-head-checkbox"><CheckboxField /></th>
+              <th class="table-head-checkbox">
+                <div class="check-total-container">
+                  <CheckboxField
+                    type="checkAll"
+                    @handleCheckAll="handleCheckAll"
+                  />
+                </div>
+              </th>
               <th class="m-150">
                 Mã nhân viên
                 <div class="line"></div>
@@ -80,7 +87,7 @@
                 Giới tính
                 <div class="line"></div>
               </th>
-              <th class="m-150">
+              <th class="m-150 date-field">
                 Ngày sinh
                 <div class="line"></div>
               </th>
@@ -126,6 +133,8 @@
               @handleReload="getListEmployee"
               :listDeparment="listDepartment"
               @duplicateEmployee="handleDuplicateEmployee"
+              :isCheckedAll="isCheckedAll"
+              @handleDeleteList="handleDeleteList"
             />
             <!-- End of employee detail -->
             <!--  -->
@@ -250,6 +259,8 @@ export default {
           name: "100 bản ghi trên 1 trang",
         },
       ],
+      isCheckedAll: false, // theo dõi check box có được chọn hay không
+      listEmployeeChecked: [], // danh sách nhân viên được check
     };
   },
   //#endregion
@@ -401,6 +412,30 @@ export default {
     handelFilter() {
       this.pageInt = 1;
       this.getListEmployee();
+    },
+
+    /*
+     * Bắt sự kiện check toàn bộ dữ liệu bảng
+     * CreatedBy : PQhieu(29/06/2021)
+     */
+    handleCheckAll() {
+      this.isCheckedAll = !this.isCheckedAll;
+    },
+
+    /**
+     * Quản lý danh sách nhân viên được check
+     * CreatedBy : PQhieu(29/06/2021)
+     */
+    handleDeleteList(employeeId, status) {
+      if (status) {
+        this.listEmployeeChecked.push(employeeId);
+      } else {
+        var newArr = this.listEmployeeChecked.filter(
+          (item) => item != employeeId
+        );
+        this.listEmployeeChecked = [...newArr];
+      }
+      console.log(this.listEmployeeChecked);
     },
     //#endregion
 
@@ -627,5 +662,8 @@ export default {
 .pag-btn.active {
   color: #111;
   cursor: pointer;
+}
+.date-field{
+  text-align: center;
 }
 </style>
